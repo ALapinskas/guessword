@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<head>
+    <script type="module" src="index.es6.js"></script>
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <style>
+        #keyboard {
+           /* position: absolute;*/
+        }
+        #keyboard .row:not(:last-child) {
+            margin-bottom: 5px;
+        }
+        #keyboard button {
+            font-size: 16pt;
+            width: 22pt;
+            height: 35pt;
+        }
+        #keyboard button.control {
+            width: auto;
+        }
+        #keyboard .marked {
+            background-color: #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Guess the word</h1>
+    <p>Guess the english verb. <br />
+        Input the word and press confirm button,<br />
+        if the is no such letter it marked dark grey <br />
+        if the letter presented, but position is incorrect,<br />
+        it marked light grey, <br />
+        if the letter presented and position is correct it marked yellow.</p>
+    <p>Win, and take the price!</p>
+    <div id="game"></div>
+    <div id="keyboard">
+        <div class="row">
+            <button class="" data-value="q" data-action="input">q</button>
+            <button class="" data-value="w" data-action="input">w</button>
+            <button class="" data-value="e" data-action="input">e</button>
+            <button class="" data-value="r" data-action="input">r</button>
+            <button class="" data-value="t" data-action="input">t</button>
+            <button class="" data-value="y" data-action="input">y</button>
+            <button class="" data-value="u" data-action="input">u</button>
+            <button class="" data-value="i" data-action="input">i</button>
+            <button class="" data-value="o" data-action="input">o</button>
+            <button class="" data-value="p" data-action="input">p</button>
+        </div>
+        <div class="row">
+            <button class="" data-value="a" data-action="input">a</button>
+            <button class="" data-value="s" data-action="input">s</button>
+            <button class="" data-value="d" data-action="input">d</button>
+            <button class="" data-value="f" data-action="input">f</button>
+            <button class="" data-value="g" data-action="input">g</button>
+            <button class="" data-value="h" data-action="input">h</button>
+            <button class="" data-value="j" data-action="input">j</button>
+            <button class="" data-value="k" data-action="input">k</button>
+            <button class="" data-value="l" data-action="input">l</button>
+        </div>
+        <div class="row">
+            <button class="control" id="confirm" disabled="true" data-action="confirm">Confirm</button>
+            <button class="" data-value="z" data-action="input">z</button>
+            <button class="" data-value="x" data-action="input">x</button>
+            <button class="" data-value="c" data-action="input">c</button>
+            <button class="" data-value="v" data-action="input">v</button>
+            <button class="" data-value="b" data-action="input">b</button>
+            <button class="" data-value="n" data-action="input">n</button>
+            <button class="" data-value="m" data-action="input">m</button>
+            <button class="control" id="clear" data-action="clear">Clear</button>
+        </div>
+    </div>
+</body>

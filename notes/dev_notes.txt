@@ -1,0 +1,5 @@
+Requirements:
+
+1. Browser, adaptive app
+2. Optional number of letters, number of attempts
+3. Connect to public dict api

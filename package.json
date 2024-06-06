@@ -1,0 +1,36 @@
+{
+  "name": "guessword",
+  "version": "0.0.1",
+  "description": "Guess the word game",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "npx webpack serve --mode=development",
+    "build-dev": "webpack --mode=development",
+    "build-prod": "webpack --mode=production"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ALapinskas/guessword.git"
+  },
+  "keywords": [
+    "guess the word",
+    "game",
+    "javascript"
+  ],
+  "author": "Arturas-Alfredas Lapinskas",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ALapinskas/guessword/issues"
+  },
+  "homepage": "https://github.com/ALapinskas/guessword#readme",
+  "dependencies": {
+    "http-server": "14.1.1",
+    "jsge": "1.4.32"
+  },
+  "devDependencies": {
+    "webpack": "5.91.0",
+    "webpack-cli": "5.1.4",
+    "webpack-dev-server": "5.0.4"
+  }
+}
