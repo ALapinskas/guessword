@@ -1,10 +1,10 @@
 {
   "name": "guessword",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Guess the word game",
   "main": "src/index.js",
   "scripts": {
-    "start": "npx webpack serve --mode=development",
+    "start": "webpack serve --mode=development",
     "build-dev": "webpack --mode=development",
     "build-prod": "webpack --mode=production"
   },
