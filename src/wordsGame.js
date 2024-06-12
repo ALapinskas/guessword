@@ -29,6 +29,9 @@ export class WordsGame extends GameStage {
     #win = false;
     #loose = false;
     #blockControllers = false;
+
+    #games = 0;
+    #wins = 0;
     register() {
         const settings = this.systemSettings.customSettings;
         this.iLoader.registerLoader("Words", (key, url) => fetch(url).then(response => response.text()));
@@ -40,32 +43,7 @@ export class WordsGame extends GameStage {
     }
 
     init() {
-        const letterNum = this.#letterNum,
-            letterCardSize = this.#letterCardSize,
-            letterCardSpace = this.#letterCardSpaces,
-            attempts = this.#attempts,
-            w = letterNum * letterCardSize + ((letterNum - 1) * letterCardSpace),
-            h = attempts * letterCardSize + ((attempts - 1) * letterCardSpace);
-        
-        this.systemSettings.canvasMaxSize.width = w;
-        this.systemSettings.canvasMaxSize.height = h;
-
-        const allWords = this.iLoader.getWords("englishNouns");
-        // filter letters with letters number: this.#letterNum
-        this.#wordList = allWords.split("\r\n").filter((word) => word.length === letterNum);
-        
-        this.#guessWord = this.#randomWord(this.#wordList);
-        
-        for (let i = 0; i < this.#attempts; i++) {
-            const row = [],
-                marginTop = i * letterCardSize + (i > 0 ? i * this.#letterCardSpaces : 0);
-            for (let j = 0; j < this.#letterNum; j++) {
-                const marginLeft = j * letterCardSize + (j > 0 ? j *this.#letterCardSpaces : 0);
-                const letterCard = this.draw.rotateYObject(marginLeft, marginTop, letterCardSize, letterCardSize, "rgba(0, 0, 0, 1)");
-                row.push({letter: null, card: letterCard});
-            }
-            this.#rows.push(row);
-        }
+        //this.#startGame();
     }
 
     start() {
@@ -88,25 +66,89 @@ export class WordsGame extends GameStage {
 
     #mouseClickEvent = (event) => {
         const button = event.target.dataset;
-        if (this.#win || this.#loose || this.#blockControllers) {
-            return false;
-        }
+        
         if (button.action) {
             switch (button.action) {
                 case "input":
+                    if (this.#win || this.#loose || this.#blockControllers) {
+                        return false;
+                    }
                     const letter = button.value;
                     this.#pressKeyButton(letter);
                     break;
                 case "clear":
+                    if (this.#win || this.#loose || this.#blockControllers) {
+                        return false;
+                    }
                     this.#pressBackButton();
                     break;
                 case "confirm":
+                    if (this.#win || this.#loose || this.#blockControllers) {
+                        return false;
+                    }
                     this.#pressConfirmButton();
                     break;
+                case "next_screen":
+                    this.#switchScreen();
+                    this.#startGame();
+                    break;
+                case "game_over":
+                    if (this.#win === false && this.#loose === false) {
+                        this.#gameOver();
+                    }
+                    break;
+                case "reset":
+                    if (this.#win === false && this.#loose === false) {
+                        this.#gameOver(false);
+                        this.#startGame();
+                    } else {
+                        this.#startGame();
+                    }
+                    break;
+                default:
+                    break;
+
             }
         } else {
             console.log("clicked something else");
             // popup logic here
+        }
+    }
+
+    #cleanupRows = () => {
+        return new Promise((resolve, reject) => {
+            const len = this.#rows.length;
+            if (len > 0) {
+                for (let i = 0; i < len; i++) {
+                    const row = this.#rows[i];
+                    for (let j = 0; j < row.length; j++) {
+                        const element = row[j];
+                        element.card.destroy();
+                        if (element.letter) {
+                            element.letter.destroy();
+                        }
+                    }
+                }
+                resolve();
+            } else {
+                resolve();
+            }
+        });
+    }
+
+    #fillEmptyCells = () => {
+        const letterNum = this.#letterNum,
+            letterCardSize = this.#letterCardSize,
+            letterCardSpace = this.#letterCardSpaces;
+        for (let i = 0; i < this.#attempts; i++) {
+            const row = [],
+                marginTop = i * letterCardSize + (i > 0 ? i * this.#letterCardSpaces : 0);
+            for (let j = 0; j < this.#letterNum; j++) {
+                const marginLeft = j * letterCardSize + (j > 0 ? j *this.#letterCardSpaces : 0);
+                const letterCard = this.draw.rotateYObject(marginLeft, marginTop, letterCardSize, letterCardSize, "rgba(0, 0, 0, 1)");
+                row.push({letter: null, card: letterCard});
+            }
+            this.#rows[i] = row;
         }
     }
 
@@ -172,18 +214,33 @@ export class WordsGame extends GameStage {
 
     #increaseAttempt() {
         if (this.#currentAttempt === this.#attempts) {
-            alert("Игра закончена!!! Загаданное слово: " + this.#guessWord);
-            this.#loose = true;
+            this.#gameOver();
         } else {
             this.#currentAttempt += 1;
             this.#currentWord = "";
         }
     }
 
+    #increaseGameWins = () => {
+        this.#games +=1;
+        if (this.#win) {
+            this.#wins += 1;
+            document.getElementById("wins").innerText = this.#wins;
+        }
+        document.getElementById("games").innerText = this.#games;
+    }
+
     #markButton = (letter) => {
         const keyboardLetter = document.querySelector(`[data-value="${letter}"]`);
         
         keyboardLetter.classList.add("marked");
+    }
+
+    #cleanupMarks = () => {
+        const buttons = document.getElementsByTagName("button");
+        for (const button of buttons) {
+            button.classList.remove("marked");
+        }
     }
 
     #loaderErrorHandler = (error) => {
@@ -241,6 +298,7 @@ export class WordsGame extends GameStage {
                 if (currentWord === this.#guessWord) {
                     this.#win = true;
                     setTimeout(() => alert("Вы победили!!"), 500);
+                    this.#increaseGameWins();
                 } else {
                     this.#increaseAttempt();
                     confirmButton.disabled = true;
@@ -345,7 +403,69 @@ export class WordsGame extends GameStage {
                     //card.bgColor = "rgba(0,0,0,1)";
                 }
                 card.rotate();
-            }, 10 );
+            } );
+        });
+    }
+
+    #switchScreen = () => {
+        console.log("switch screen");
+        document.getElementById("first_screen").style.display = "none";
+        document.getElementById("second_screen").style.display = "block";
+    }
+
+    #gameOver = (showMessage = true) => {
+        if (showMessage) {
+            alert("Игра закончена!!! Загаданное слово: " + this.#guessWord);
+        }
+        this.#loose = true;
+        this.#increaseGameWins();
+    }
+
+    #startGame = () => {
+        document.getElementById("reset").blur();
+        const superEasy = document.getElementById("contactChoice1"),
+            easy = document.getElementById("contactChoice2"),
+            hard = document.getElementById("contactChoice4");
+        console.log(superEasy.checked);
+        console.log(easy.checked);
+        console.log(hard.checked)
+        if (superEasy.checked) {
+            console.log("set 3");
+            this.#letterNum = 3;
+        } else if (easy.checked) {
+            this.#letterNum = 4;
+        } else if (hard.checked) {
+            this.#letterNum = 6;
+        }
+
+        const letterNum = this.#letterNum,
+            letterCardSize = this.#letterCardSize,
+            letterCardSpace = this.#letterCardSpaces,
+            attempts = this.#attempts,
+            w = letterNum * letterCardSize + ((letterNum - 1) * letterCardSpace),
+            h = attempts * letterCardSize + ((attempts - 1) * letterCardSpace);
+        
+        this.systemSettings.canvasMaxSize.width = w;
+        this.systemSettings.canvasMaxSize.height = h;
+
+        //this._resize();
+        this.iSystem.iRender.fixCanvasSize();
+        console.log("width: ", w);
+        console.log("height: ", h);
+
+        const allWords = this.iLoader.getWords("englishNouns");
+        // filter letters with letters number: this.#letterNum
+        this.#wordList = allWords.split("\r\n").filter((word) => word.length === letterNum);
+
+        this.#cleanupMarks();
+        this.#currentAttempt = 1;
+        this.#currentWord = "";
+        this.#win = false;
+        this.#loose = false;
+        this.#blockControllers = false;
+        this.#guessWord = this.#randomWord(this.#wordList);
+        this.#cleanupRows().then(() => {
+            return this.#fillEmptyCells();
         });
     }
 }

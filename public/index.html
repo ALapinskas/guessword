@@ -3,6 +3,7 @@
     <script type="module" src="index.es6.js"></script>
     <meta http-equiv="Pragma" content="no-cache">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta charset="UTF-8"> 
     <style>
         #keyboard {
            /* position: absolute;*/
@@ -22,53 +23,94 @@
             background-color: #ccc;
             border-radius: 4px;
         }
+        #second_screen {
+            display: none;
+        }
+        button {
+            font-size: 16pt;
+        }
+        .control_buttons {
+            margin-bottom: 15px;
+            display: flex;
+        }
+        .control_buttons .info {
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
+    <div id="first_screen">
     <h1>Угадай слово</h1>
     <p>Угадайте английское существительное.<br />
-        Введите слово из 5 букв, используя клавиатуру или виртуальную клавиатуру внизу и нажмите Confirm, или Enter<br />
+        Введите слово в строку, используя клавиатуру или виртуальную клавиатуру внизу и нажмите Ввод, или Enter<br />
         <ul>
             <li><img width="70px" height="70px" src="/images/dark_g.png">Если в слове нет такой буквы карточка раскрашивается в темно-серый.</li>
             <li><img width="70px" height="70px" src="/images/light_g.png">Если буква есть, но в другом месте, карточка раскрашивается в светло-серый цвет.</li>
             <li><img width="70px" height="70px" src="/images/yellow.png">Если буква есть и позиция совпадает, карточка раскрашивается в желтый</li>
             <li><img width="30px" height="48px" src="/images/keyboard.png">Буквы которых точно нет в слове, будут отмечаться на виртуальной клавиатуре темно-серым</li>
         </ul>
-    <div id="game"></div>
-    <div id="keyboard">
-        <div class="row">
-            <button class="" data-value="q" data-action="input">q</button>
-            <button class="" data-value="w" data-action="input">w</button>
-            <button class="" data-value="e" data-action="input">e</button>
-            <button class="" data-value="r" data-action="input">r</button>
-            <button class="" data-value="t" data-action="input">t</button>
-            <button class="" data-value="y" data-action="input">y</button>
-            <button class="" data-value="u" data-action="input">u</button>
-            <button class="" data-value="i" data-action="input">i</button>
-            <button class="" data-value="o" data-action="input">o</button>
-            <button class="" data-value="p" data-action="input">p</button>
+        <div id="start_block">
+            <fieldset>
+                <legend>Сложность</legend>
+                <div>
+                  <input type="radio" id="contactChoice1" name="difficulty" value="super-easy" />
+                  <label for="contactChoice1">Очень легкий</label>
+                  <input type="radio" id="contactChoice2" name="difficulty" value="easy" />
+                  <label for="contactChoice2">Легкий</label>
+                  <input type="radio" id="contactChoice3" name="difficulty" value="medium" checked />
+                  <label for="contactChoice3">Средний</label>
+                  <input type="radio" id="contactChoice4" name="difficulty" value="hard" />
+                  <label for="contactChoice4">Сложный</label>
+                </div>
+            </fieldset>
+            <div>
+                <button class="" data-action="next_screen">Играть</button>
+            </div>
+            
         </div>
-        <div class="row">
-            <button class="" data-value="a" data-action="input">a</button>
-            <button class="" data-value="s" data-action="input">s</button>
-            <button class="" data-value="d" data-action="input">d</button>
-            <button class="" data-value="f" data-action="input">f</button>
-            <button class="" data-value="g" data-action="input">g</button>
-            <button class="" data-value="h" data-action="input">h</button>
-            <button class="" data-value="j" data-action="input">j</button>
-            <button class="" data-value="k" data-action="input">k</button>
-            <button class="" data-value="l" data-action="input">l</button>
+    </div>
+    <div id="second_screen">
+        <div class="control_buttons">
+            <button class="" data-action="game_over">Сдаться</button>
+            <div class="info">Игр сыграно: <span id="games">0</span> Побед: <span id="wins">0</span></div>
+            <button id="reset" class="" data-action="reset">Заново</button>
         </div>
-        <div class="row">
-            <button class="control" id="confirm" disabled="true" data-action="confirm">Confirm</button>
-            <button class="" data-value="z" data-action="input">z</button>
-            <button class="" data-value="x" data-action="input">x</button>
-            <button class="" data-value="c" data-action="input">c</button>
-            <button class="" data-value="v" data-action="input">v</button>
-            <button class="" data-value="b" data-action="input">b</button>
-            <button class="" data-value="n" data-action="input">n</button>
-            <button class="" data-value="m" data-action="input">m</button>
-            <button class="control" id="clear" data-action="clear">Clear</button>
+        <div id="game"></div>
+        <div id="keyboard">
+            <div class="row">
+                <button class="" data-value="q" data-action="input">q</button>
+                <button class="" data-value="w" data-action="input">w</button>
+                <button class="" data-value="e" data-action="input">e</button>
+                <button class="" data-value="r" data-action="input">r</button>
+                <button class="" data-value="t" data-action="input">t</button>
+                <button class="" data-value="y" data-action="input">y</button>
+                <button class="" data-value="u" data-action="input">u</button>
+                <button class="" data-value="i" data-action="input">i</button>
+                <button class="" data-value="o" data-action="input">o</button>
+                <button class="" data-value="p" data-action="input">p</button>
+            </div>
+            <div class="row">
+                <button class="" data-value="a" data-action="input">a</button>
+                <button class="" data-value="s" data-action="input">s</button>
+                <button class="" data-value="d" data-action="input">d</button>
+                <button class="" data-value="f" data-action="input">f</button>
+                <button class="" data-value="g" data-action="input">g</button>
+                <button class="" data-value="h" data-action="input">h</button>
+                <button class="" data-value="j" data-action="input">j</button>
+                <button class="" data-value="k" data-action="input">k</button>
+                <button class="" data-value="l" data-action="input">l</button>
+            </div>
+            <div class="row">
+                <button class="control" id="confirm" disabled="true" data-action="confirm">Ввод</button>
+                <button class="" data-value="z" data-action="input">z</button>
+                <button class="" data-value="x" data-action="input">x</button>
+                <button class="" data-value="c" data-action="input">c</button>
+                <button class="" data-value="v" data-action="input">v</button>
+                <button class="" data-value="b" data-action="input">b</button>
+                <button class="" data-value="n" data-action="input">n</button>
+                <button class="" data-value="m" data-action="input">m</button>
+                <button class="control" id="clear" data-action="clear"><-</button>
+            </div>
         </div>
     </div>
 </body>

@@ -52,38 +52,6 @@ class RotateYText extends DrawTextObject {
         //}, 100);
         
     }
-    
-    rotate = () => {
-        const step = 40,
-            stepRotation = Math.PI / step, // 3.14 / 10
-            cardWidth = this.boundariesBox.width; // 70 / 10
-        const card = this,
-            currentRotation = card.rotation;
-        if (currentRotation < Math.PI/2) {
-            card.rotation += stepRotation;
-            console.log(this.rotation);
-            this.x = this.originalXPos + ((cardWidth - cardWidth * Math.cos(card.rotation)) / 2);
-        } else if (currentRotation < Math.PI) {
-            console.log(this.rotation);
-            card.rotation -= stepRotation;
-            console.log(card.rotation);
-            this.x = this.originalXPos + ((cardWidth - cardWidth * Math.cos(card.rotation)) / 2);
-            //this.bgColor = "rgba(133,133,133,1)";
-        } else if (currentRotation < 3*Math.PI/2) {
-            this.rotation -= stepRotation;
-            this.x = this.originalXPos + ((cardWidth - cardWidth * Math.cos(card.rotation)) / 2);
-            //this.bgColor = "rgba(133,133,133,1)"
-        } else if (currentRotation < 2 * Math.PI) {
-            this.rotation -= stepRotation;
-            this.x = this.originalXPos + ((cardWidth - cardWidth * Math.cos(card.rotation)) / 2);
-            //this.bgColor = "rgba(0,0,0,1)";
-        } else {
-            // reset rotation angle;
-            this.rotation = 0;
-            //this.x = this.originalXPos;
-        }
-    }
-
     rotateAnticlockwise = () => {
         const step = 40,
             stepRotation = Math.PI / step, // 3.14 / 10
