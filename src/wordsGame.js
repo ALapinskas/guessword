@@ -32,6 +32,9 @@ export class WordsGame extends GameStage {
 
     #games = 0;
     #wins = 0;
+
+    #boardWidth;
+    #boardHeight;
     register() {
         const settings = this.systemSettings.customSettings;
         this.iLoader.registerLoader("Words", (key, url) => fetch(url).then(response => response.text()));
@@ -297,7 +300,7 @@ export class WordsGame extends GameStage {
                 this.#blockControllers = false;
                 if (currentWord === this.#guessWord) {
                     this.#win = true;
-                    setTimeout(() => alert("Вы победили!!"), 500);
+                    setTimeout(() => this.#showWin(), 500);
                     this.#increaseGameWins();
                 } else {
                     this.#increaseAttempt();
@@ -414,21 +417,81 @@ export class WordsGame extends GameStage {
     }
 
     #gameOver = (showMessage = true) => {
-        if (showMessage) {
-            alert("Игра закончена!!! Загаданное слово: " + this.#guessWord);
-        }
+        const apiKey = this.systemSettings.customSettings.yandex_api_key;
+        
+        fetch("https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=" + apiKey + "&lang=en-ru&text=" + this.#guessWord)
+            .then((result) => result.json())
+            .then((result) => {
+                console.log(result);
+                const noun = result.def.find((param) => param.pos === "noun"),
+                    words = noun ? noun.tr : null;
+                    
+                let meanString = "";
+                if (words) {
+                    words.forEach((element, index) => {
+                        meanString += element.text + (index !== words.length - 1 ? ", " : ".");
+                    });
+                }
+                if (showMessage) {
+                    this.#showPopup("<h3>Вы проиграли!!!</h3><p>Загаданное слово: </p><p><b>" + this.#guessWord + (words ? "</b> - " + meanString + "</p>" : ""));
+                }
+            });
         this.#loose = true;
         this.#increaseGameWins();
     }
 
+    #showWin = () => {
+        const apiKey = this.systemSettings.customSettings.yandex_api_key;
+        
+        fetch("https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=" + apiKey + "&lang=en-ru&text=" + this.#guessWord)
+            .then((result) => result.json())
+            .then((result) => {
+                
+                const noun = result.def.find((param) => param.pos === "noun"),
+                    words = noun ? noun.tr : null;
+                    
+                let meanString = "";
+                if (words) {
+                    words.forEach((element, index) => {
+                        meanString += element.text + (index !== words.length - 1 ? ", " : ".");
+                    });
+                }
+            
+                this.#showPopup("<h3>Вы победили!!!</h3><p><b>" + this.#guessWord + (words ? "</b> - " + meanString + "</p>" : ""));
+            });
+    }
+
+    #showPopup = (message) => {
+        const popup = document.getElementById("popup"),
+            gameDiv = document.getElementById("game"),
+            messageDiv = document.getElementById("message");
+
+        messageDiv.innerHTML = message;
+        document.getElementById("overlay").style.display = "block";
+        popup.style.left = gameDiv.offsetLeft + "px";
+        popup.style.display = "block";
+        if (window.innerWidth - 60 > popup.offsetWidth) {
+            popup.style.left = window.innerWidth / 2 - popup.offsetWidth / 2 + "px"; 
+        }
+        popup.style.top = window.innerHeight / 2 - popup.offsetHeight / 2 + "px"; 
+
+    }
+
+    #hidePopup = () => {
+        document.getElementById("popup").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+    }
+
     #startGame = () => {
+        console.log("--->>>start game");
         document.getElementById("reset").blur();
         const superEasy = document.getElementById("contactChoice1"),
             easy = document.getElementById("contactChoice2"),
-            hard = document.getElementById("contactChoice4");
-        console.log(superEasy.checked);
-        console.log(easy.checked);
-        console.log(hard.checked)
+            hard = document.getElementById("contactChoice4"),
+            confirmButton = document.getElementById("confirm");
+
+        this.#hidePopup();
+        confirmButton.disbled = true;
         if (superEasy.checked) {
             console.log("set 3");
             this.#letterNum = 3;
@@ -445,13 +508,14 @@ export class WordsGame extends GameStage {
             w = letterNum * letterCardSize + ((letterNum - 1) * letterCardSpace),
             h = attempts * letterCardSize + ((attempts - 1) * letterCardSpace);
         
+        this.#boardWidth = w;
+        this.#boardHeight = h;
+
         this.systemSettings.canvasMaxSize.width = w;
         this.systemSettings.canvasMaxSize.height = h;
 
         //this._resize();
         this.iSystem.iRender.fixCanvasSize();
-        console.log("width: ", w);
-        console.log("height: ", h);
 
         const allWords = this.iLoader.getWords("englishNouns");
         // filter letters with letters number: this.#letterNum

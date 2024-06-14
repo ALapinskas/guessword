@@ -380,6 +380,7 @@ award
 awareness
 awe
 axis
+axe
 azimuth
 babe
 baboon
@@ -3404,6 +3405,7 @@ laryngitis
 lasagna
 lashes
 last
+lasso
 latency
 latex
 lathe

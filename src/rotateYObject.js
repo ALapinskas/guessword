@@ -131,15 +131,15 @@ const drawRotateYObject = (renderObject, gl, pageData, program, vars) => {
     const colorArray = renderObject.bgColor.replace("rgba(", "").replace(")", "").split(",").map((/** @param {string} */item) => Number(item.trim()));
     gl.uniform4f(colorUniformLocation, colorArray[0]/255, colorArray[1]/255, colorArray[2]/255, colorArray[3]);
     
-    if (blend) {
-        gl.blendFunc(blend[0], blend[1]);
-    }
+    //if (blend) {
+    //    gl.blendFunc(blend[0], blend[1]);
+    //}
     
-    if (renderObject.isMaskAttached) {
-        gl.stencilFunc(gl.EQUAL, renderObject._maskId, 0xFF);
-    } else if (renderObject._isMask) {
-        gl.stencilFunc(gl.ALWAYS, renderObject.id, 0xFF);
-    }
+    //if (renderObject.isMaskAttached) {
+    //    gl.stencilFunc(gl.EQUAL, renderObject._maskId, 0xFF);
+    //} else if (renderObject._isMask) {
+    //    gl.stencilFunc(gl.ALWAYS, renderObject.id, 0xFF);
+    //}
     return Promise.resolve([verticesNumber, gl.TRIANGLES]);
 }
 
@@ -219,7 +219,7 @@ const drawRotateYText = (renderObject, gl, pageData, program, vars) => {
     verticesNumber += 6;
     // remove box
     // fix text edges
-    gl.blendFunc(blend[0], blend[1]);
+    //gl.blendFunc(blend[0], blend[1]);
     //
     //var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
     

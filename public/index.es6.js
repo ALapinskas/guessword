@@ -1397,12 +1397,16 @@ class DrawTextObject extends _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_0__.Dr
     }
 
     /**
+     * font color
      * @type {string}
      */
     get fillStyle() {
         return this.#fillStyle;
     }
 
+    /**
+     * font color
+     */
     set fillStyle(value) {
         if (value !== this.#fillStyle) {
             this.#fillStyle = value;
@@ -1411,12 +1415,16 @@ class DrawTextObject extends _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_0__.Dr
     }
 
     /**
+     * font stroke color
      * @type {string}
      */
     get strokeStyle() {
         return this.#strokeStyle;
     }
 
+    /**
+     * font stroke color
+     */
     set strokeStyle(value) {
         if (value !== this.#strokeStyle) {
             this.#strokeStyle = value;
@@ -4328,7 +4336,7 @@ class System {
     #iSystem;
     /**
      * @param {SystemSettings} iSystemSettings - holds iSystem settings
-     * @param {HTMLElement} [canvasContainer] - If it is not passed, iSystem will create div element and attach it to body
+     * @param {HTMLElement | null} [canvasContainer = null] - If it is not passed, iSystem will create div element and attach it to body
      */
     constructor(iSystemSettings, canvasContainer) {
         if (!iSystemSettings) {
@@ -4361,7 +4369,7 @@ class System {
      * A main factory method for create GameStage instances, <br>
      * register them in a System and call GameStage.register() stage
      * @param {string} screenPageName
-     * @param {GameStage} stage
+     * @param {typeof GameStage} stage
      */
     registerStage(screenPageName, stage) {
         if (screenPageName && typeof screenPageName === "string" && screenPageName.trim().length > 0) {
@@ -4549,7 +4557,6 @@ const primitivesFragmentShader = `
     uniform vec4 u_color;
     uniform float u_fade_min; 
     uniform float u_fade_max;
-    uniform vec2 a_position;
     uniform vec2 u_resolution;
     uniform vec2 u_translation;
 
@@ -6246,6 +6253,8 @@ class SystemSettings {
     };
 
     static defaultCanvasKey = "default";
+
+    static customSettings = {};
 }
 
 /***/ }),
@@ -6954,6 +6963,476 @@ function calculateEllipseVertices(x = 0, y = 0, radiusX, radiusY, angle = 2*Math
 
 /***/ }),
 
+/***/ "./src/rotateYObject.js":
+/*!******************************!*\
+  !*** ./src/rotateYObject.js ***!
+  \******************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   RotateYRect: () => (/* binding */ RotateYRect),
+/* harmony export */   RotateYText: () => (/* binding */ RotateYText),
+/* harmony export */   createRotateYDrawObjectInstance: () => (/* binding */ createRotateYDrawObjectInstance),
+/* harmony export */   createRotateYTextInstance: () => (/* binding */ createRotateYTextInstance),
+/* harmony export */   drawRotateYObject: () => (/* binding */ drawRotateYObject),
+/* harmony export */   drawRotateYText: () => (/* binding */ drawRotateYText)
+/* harmony export */ });
+/* harmony import */ var jsge_src_base_DrawRectObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jsge/src/base/DrawRectObject.js */ "./node_modules/jsge/src/base/DrawRectObject.js");
+/* harmony import */ var jsge_src_base_DrawTextObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jsge/src/base/DrawTextObject.js */ "./node_modules/jsge/src/base/DrawTextObject.js");
+/* harmony import */ var jsge_src_base_WebGl_TextureStorage_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! jsge/src/base/WebGl/TextureStorage.js */ "./node_modules/jsge/src/base/WebGl/TextureStorage.js");
+
+
+
+class RotateYRect extends jsge_src_base_DrawRectObject_js__WEBPACK_IMPORTED_MODULE_0__.DrawRectObject {
+    z = 0;
+    originalXPos;
+
+    skipShifts = 0;
+    constructor(x,y,w,h,bg) {
+        super(x,y,w,h,bg);
+        this.originalXPos = x;
+        //setInterval(() => {
+        //    this.rotate();
+        //}, 10);
+    }
+    
+    rotate = () => {
+        const step = 40,
+            stepRotation = Math.PI / step, // 3.14 / 10
+            cardWidth = this.width; // 70 / 10
+        const card = this,
+            currentRotation = card.rotation;
+        if (currentRotation < Math.PI/2) {
+            card.rotation += stepRotation;
+            this.x = this.originalXPos + ((cardWidth - cardWidth * Math.cos(card.rotation)) / 2);
+        } else if (currentRotation < Math.PI) {
+            this.rotation += stepRotation;
+            this.x = this.originalXPos + ((cardWidth - cardWidth * Math.cos(card.rotation)) / 2);
+        } else if (currentRotation < 3*Math.PI/2) {
+            this.rotation += stepRotation;
+            this.x = this.originalXPos + ((cardWidth - cardWidth * Math.cos(card.rotation)) / 2);
+        } else if (currentRotation < 2 * Math.PI) {
+            this.rotation += stepRotation;
+            this.x = this.originalXPos + ((cardWidth - cardWidth * Math.cos(card.rotation)) / 2);
+        } else {
+            // reset rotation angle;
+            this.rotation = 0;
+            //this.x = this.originalXPos;
+        }
+    }
+}
+
+class RotateYText extends jsge_src_base_DrawTextObject_js__WEBPACK_IMPORTED_MODULE_1__.DrawTextObject {
+    z = 0;
+    originalXPos;
+    constructor(mapX, mapY, text, font, fillStyle) {
+        super(mapX, mapY, text, font, fillStyle);
+        this.originalXPos = mapX;
+        //console.log("card width: ", this.boundariesBox.width);
+        //setInterval(() => {
+        //    this.rotate();
+        //}, 100);
+        
+    }
+    rotateAnticlockwise = () => {
+        const step = 40,
+            stepRotation = Math.PI / step, // 3.14 / 10
+            cardWidth = this.boundariesBox.width; // 70 / 10
+        
+        this.rotation += stepRotation;
+        this.x = this.originalXPos + ((cardWidth - cardWidth * Math.cos(this.rotation)) / 2);
+    }
+    rotateClockWise = () => {
+        const step = 40,
+            stepRotation = Math.PI / step, // 3.14 / 10
+            cardWidth = this.boundariesBox.width; // 70 / 10
+            
+        this.rotation -= stepRotation;
+        this.x = this.originalXPos + ((cardWidth - cardWidth * Math.cos(this.rotation)) / 2);
+    }
+}
+
+const createRotateYDrawObjectInstance = (x, y, w, h, bgColor) => {
+    const renderObject = new RotateYRect(x, y, w, h, bgColor);
+    return renderObject;
+}
+
+const drawRotateYObject = (renderObject, gl, pageData, program, vars) => {
+    const [ xOffset, yOffset ] = renderObject.isOffsetTurnedOff === true ? [0,0] : pageData.worldOffset,
+        x = renderObject.x - xOffset,
+        y = renderObject.y - yOffset,
+        z = renderObject.z,
+        scale = [1, 1, 1],
+        rotation = renderObject.rotation,
+        blend = renderObject.blendFunc ? renderObject.blendFunc : [gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA],
+        { 
+            u_translation: translationLocation,
+            u_rotation: rotationRotation,
+            u_scale: scaleLocation,
+            u_resolution: resolutionUniformLocation,
+            u_color: colorUniformLocation,
+            a_position: positionAttributeLocation,
+            u_fade_min: fadeMinLocation
+        } = vars;
+        
+    let verticesNumber = 0;
+    gl.useProgram(program);
+    // set the resolution
+    const depth = 1000;
+    gl.uniform4f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height, depth, 1);
+    gl.uniform3f(translationLocation, x, y, z);
+    gl.uniform3f(scaleLocation, scale[0], scale[1], scale[2]);
+    gl.uniform1f(rotationRotation, rotation);
+    gl.uniform1f(fadeMinLocation, 0);
+
+    gl.enableVertexAttribArray(positionAttributeLocation);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+
+    const x1 = 0,
+        x2 = 0 + renderObject.width,
+        y1 = 0,
+        y2 = 0 + renderObject.height;
+    gl.bufferData(gl.ARRAY_BUFFER, 
+        new Float32Array([
+            x1, y1, z,
+            x2, y1, z,
+            x1, y2, z,
+            x1, y2, z,
+            x2, y1, z,
+            x2, y2, z]), gl.STATIC_DRAW);
+    verticesNumber += 6;
+    //Tell the attribute how to get data out of positionBuffer
+    const size = 3,
+        type = gl.FLOAT, // data is 32bit floats
+        normalize = false,
+        stride = 0, // move forward size * sizeof(type) each iteration to get next position
+        offset = 0; // start of beginning of the buffer
+    gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
+
+    const colorArray = renderObject.bgColor.replace("rgba(", "").replace(")", "").split(",").map((/** @param {string} */item) => Number(item.trim()));
+    gl.uniform4f(colorUniformLocation, colorArray[0]/255, colorArray[1]/255, colorArray[2]/255, colorArray[3]);
+    
+    //if (blend) {
+    //    gl.blendFunc(blend[0], blend[1]);
+    //}
+    
+    //if (renderObject.isMaskAttached) {
+    //    gl.stencilFunc(gl.EQUAL, renderObject._maskId, 0xFF);
+    //} else if (renderObject._isMask) {
+    //    gl.stencilFunc(gl.ALWAYS, renderObject.id, 0xFF);
+    //}
+    return Promise.resolve([verticesNumber, gl.TRIANGLES]);
+}
+
+const createRotateYTextInstance = (mapX, mapY, text, font, fillStyle) => {
+    const renderObject = new RotateYText(mapX, mapY, text, font, fillStyle);
+    return renderObject;
+}
+
+const drawRotateYText = (renderObject, gl, pageData, program, vars) => {
+    const { u_translation: translationLocation,
+        u_rotation: rotationRotation,
+        u_scale: scaleLocation,
+        u_resolution: resolutionUniformLocation,
+        a_position: positionAttributeLocation,
+        a_texCoord: texCoordLocation,
+        u_image: u_imageLocation } = vars;
+
+    const {width:boxWidth, height:boxHeight} = renderObject.boundariesBox,
+        image_name = renderObject.text,
+        [ xOffset, yOffset ] = renderObject.isOffsetTurnedOff === true ? [0,0] : pageData.worldOffset,
+        x = renderObject.x - xOffset,
+        y = renderObject.y - yOffset - boxHeight,
+        z = renderObject.z,
+        blend = renderObject.blendFunc ? renderObject.blendFunc : [gl.ONE, gl.ONE_MINUS_SRC_ALPHA];
+
+    const rotation = renderObject.rotation,
+        scale = [1, 1, 1];
+    const vecX1 = 0,
+        vecY1 = 0,
+        vecX2 = 0 + boxWidth,
+        vecY2 = 0 + boxHeight;
+    const verticesBufferData = [
+        vecX1, vecY1, z,
+        vecX2, vecY1, z,
+        vecX1, vecY2, z,
+        vecX1, vecY2, z,
+        vecX2, vecY1, z,
+        vecX2, vecY2, z
+    ],
+    texturesBufferData = [
+        0, 0,
+        1, 0,
+        0, 1,
+        0, 1,
+        1, 0,
+        1, 1
+    ];
+    
+    let verticesNumber = 0;
+
+    gl.useProgram(program);
+    // set the resolution
+    const depth = 1000;
+    gl.uniform4f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height, depth, 1);
+    gl.uniform3f(translationLocation, x, y, z);
+    gl.uniform3f(scaleLocation, scale[0], scale[1], scale[2]);
+    gl.uniform1f(rotationRotation, rotation);
+    
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesBufferData), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(positionAttributeLocation);
+    //Tell the attribute how to get data out of positionBuffer
+    const size = 3,
+        type = gl.FLOAT, // data is 32bit floats
+        normalize = false,
+        stride = 0, // move forward size * sizeof(type) each iteration to get next position
+        offset = 0; // start of beginning of the buffer
+    gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
+
+    //textures buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texturesBufferData), gl.STATIC_DRAW);
+
+    gl.enableVertexAttribArray(texCoordLocation);
+    gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
+    
+    verticesNumber += 6;
+    // remove box
+    // fix text edges
+    //gl.blendFunc(blend[0], blend[1]);
+    //
+    //var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
+    
+    let textureStorage = renderObject._textureStorage;
+    if (!textureStorage) {
+        //const activeTexture = gl.getParameter(gl.ACTIVE_TEXTURE);
+        textureStorage = new jsge_src_base_WebGl_TextureStorage_js__WEBPACK_IMPORTED_MODULE_2__.TextureStorage(gl.createTexture());
+        renderObject._textureStorage = textureStorage;
+    }
+    if (textureStorage._isTextureRecalculated === true) {
+        textureStorage._isTextureRecalculated = false;
+        gl.activeTexture(gl.TEXTURE0 + 0);
+        gl.bindTexture(gl.TEXTURE_2D, textureStorage._texture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, renderObject._textureCanvas);
+        // LINEAR filtering is better for images and tiles, but for texts it produces a small blur
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        // for textures not power of 2 (texts for example)
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    } else {
+        gl.activeTexture(gl.TEXTURE0 + 0);
+        gl.bindTexture(gl.TEXTURE_2D, textureStorage._texture);
+    }
+    gl.uniform1i(u_imageLocation, textureStorage._textureIndex);
+    gl.depthMask(false);
+    return Promise.resolve([verticesNumber, gl.TRIANGLES]);
+};
+
+
+
+/***/ }),
+
+/***/ "./src/rotateYProgram.js":
+/*!*******************************!*\
+  !*** ./src/rotateYProgram.js ***!
+  \*******************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   imgAttributes: () => (/* binding */ imgAttributes),
+/* harmony export */   imgFragmentShader: () => (/* binding */ imgFragmentShader),
+/* harmony export */   imgUniforms: () => (/* binding */ imgUniforms),
+/* harmony export */   imgVertexShader: () => (/* binding */ imgVertexShader),
+/* harmony export */   primitivesAttributes: () => (/* binding */ primitivesAttributes),
+/* harmony export */   primitivesFragmentShader: () => (/* binding */ primitivesFragmentShader),
+/* harmony export */   primitivesUniforms: () => (/* binding */ primitivesUniforms),
+/* harmony export */   primitivesVertexShader: () => (/* binding */ primitivesVertexShader)
+/* harmony export */ });
+const primitivesVertexShader =  `
+    precision mediump float;
+
+    attribute vec4 a_position;
+
+    uniform vec3 u_translation;
+    uniform float u_rotation;
+    uniform vec3 u_scale;
+
+    uniform vec4 u_resolution;
+
+    void main(void) {
+        float c = cos(u_rotation);
+        float s = sin(u_rotation);
+
+        mat4 projection = mat4(
+            2.0 / u_resolution.x, 0, 0, 0,
+            0, -2.0 / u_resolution.y, 0, 0,
+            0, 0, 2.0 / u_resolution.z, 0,
+            -1, 1, 0, 1
+        );
+        //mat3 translationMatrix1 = mat3(
+        //    1, 0, 0,
+        //    0, 1, 0,
+        //    u_translation.x, u_translation.y, 1
+        //);
+        mat4 translationMatrix = mat4(
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            u_translation.x,  u_translation.y, u_translation.z, 1
+        );
+        // y-rotation
+        mat4 rotationMatrix = mat4(
+            c, 0, -s, 0,
+            0, 1, 0, 0,
+            s, 0, c, 0,
+            0, 0, 0, 1
+        );
+        //mat3 rotationMatrix = mat3(
+        //    c, s, 0,
+        //    -s, c, 0,
+        //    0, 0, 1
+        //);
+
+        //mat3 scalingMatrix = mat3(
+        //    u_scale.x, 0, 0,
+        //    0, u_scale.y, 0,
+        //    0, 0, 1
+        //);
+        mat4 scalingMatrix = mat4(
+            u_scale.x, 0, 0, 0,
+            0, u_scale.y, 0, 0,
+            0, 0, u_scale.z, 0,
+            0, 0, 0, 1
+        );
+        mat4 matrix = projection * translationMatrix * rotationMatrix * scalingMatrix;
+
+        //vec2 position = (matrix * vec3(a_position, 1)).xy;
+        //vec2 clipSpace = position / u_resolution * 2.0 - 1.0;
+        //gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+        
+        gl_Position = matrix * a_position;
+    }
+`;
+const primitivesFragmentShader = `
+    precision mediump float;
+
+    uniform vec4 u_color;
+    uniform float u_fade_min; 
+    uniform float u_fade_max;
+    uniform vec4 u_resolution;
+    uniform vec3 u_translation;
+
+    void main(void) {
+        vec4 p = u_color;
+        if (u_fade_min > 0.0) {
+            vec2 fix_tr = vec2(u_translation.x, u_resolution.y - u_translation.y); 
+            float distance = distance(fix_tr.xy, gl_FragCoord.xy);
+            if (u_fade_min <= distance && distance <= u_fade_max) {
+                float percent = ((distance - u_fade_max) / (u_fade_min - u_fade_max)) * 100.0;
+                p.a = u_color.a * (percent / 100.0);
+            }
+        }
+
+        gl_FragColor = p;
+    }
+`;
+const primitivesUniforms = ["u_translation", "u_rotation", "u_scale", "u_resolution", "u_fade_min", "u_fade_max", "u_color"];
+const primitivesAttributes = ["a_position"];
+
+const imgVertexShader =  `
+    attribute vec2 a_texCoord;
+
+    attribute vec4 a_position;
+
+    uniform vec3 u_translation;
+    uniform float u_rotation;
+    uniform vec3 u_scale;
+
+    uniform vec4 u_resolution;
+
+    varying vec2 v_texCoord;
+
+    void main(void) {
+        float c = cos(u_rotation);
+        float s = sin(u_rotation);
+
+        mat4 projection = mat4(
+            2.0 / u_resolution.x, 0, 0, 0,
+            0, -2.0 / u_resolution.y, 0, 0,
+            0, 0, 2.0 / u_resolution.z, 0,
+            -1, 1, 0, 1
+        );
+        //mat3 translationMatrix1 = mat3(
+        //    1, 0, 0,
+        //    0, 1, 0,
+        //    u_translation.x, u_translation.y, 1
+        //);
+        mat4 translationMatrix = mat4(
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            u_translation.x,  u_translation.y, u_translation.z, 1
+        );
+        // y-rotation
+        mat4 rotationMatrix = mat4(
+            c, 0, -s, 0,
+            0, 1, 0, 0,
+            s, 0, c, 0,
+            0, 0, 0, 1
+        );
+        //mat3 rotationMatrix = mat3(
+        //    c, s, 0,
+        //    -s, c, 0,
+        //    0, 0, 1
+        //);
+
+        //mat3 scalingMatrix = mat3(
+        //    u_scale.x, 0, 0,
+        //    0, u_scale.y, 0,
+        //    0, 0, 1
+        //);
+        mat4 scalingMatrix = mat4(
+            u_scale.x, 0, 0, 0,
+            0, u_scale.y, 0, 0,
+            0, 0, u_scale.z, 0,
+            0, 0, 0, 1
+        );
+        mat4 matrix = projection * translationMatrix * rotationMatrix * scalingMatrix;
+
+        //vec2 position = (matrix * vec3(a_position, 1)).xy;
+        //vec2 clipSpace = position / u_resolution * 2.0 - 1.0;
+        //gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+        
+        gl_Position = matrix * a_position;
+        
+        v_texCoord = a_texCoord;
+    }`;
+const imgFragmentShader = `
+    precision mediump float;
+
+    uniform sampler2D u_image;
+
+    //texCoords passed in from the vertex shader
+    varying vec2 v_texCoord;
+    void main() {
+        vec4 color = texture2D(u_image, v_texCoord);
+        gl_FragColor = color;
+    }`;
+const imgUniforms = ["u_translation", "u_rotation", "u_scale", "u_resolution","u_image"];
+const imgAttributes = ["a_position", "a_texCoord"];
+
+
+
+
+
+
+/***/ }),
+
 /***/ "./src/settings.js":
 /*!*************************!*\
   !*** ./src/settings.js ***!
@@ -6967,7 +7446,10 @@ __webpack_require__.r(__webpack_exports__);
 const settings = {
     letterNum: 5,
     attempts: 6,
-    words_list_url: "words.txt"
+    letterCardSize: 70,
+    letterCardSpaces: 3,
+    yandex_api_key: "dict.1.1.20240613T093817Z.de0dba1b6920ae6d.6cd6abb494861361bfca2d91efef8a45d3436e90",
+    words_list_url: "/sites/default/files/words.txt"//"words.txt"//
 }
 
 /***/ }),
@@ -6983,43 +7465,55 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   WordsGame: () => (/* binding */ WordsGame)
 /* harmony export */ });
 /* harmony import */ var jsge__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jsge */ "./node_modules/jsge/src/index.js");
-/* harmony import */ var _settings_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./settings.js */ "./src/settings.js");
 
 
-
+const MATCH = {
+    NO_MATCH: 0,
+    MATCH: 1,
+    MATCH_POS: 2
+}
 class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
+    #letterCardSpaces;
+    #letterCardSize;
     #letterNum = 0;
     #attempts = 0;
+    #currentAttempt = 1;
 
-    #wordList = "";
+    /**
+     * @type {string}
+     */
+    #currentWord = "";
+
+    #wordList;
 
     #rows = [];
 
-    #wordToGuess = "";
+    /**
+     * @type {string}
+     */
+    #guessWord = "";
+
+    #win = false;
+    #loose = false;
+    #blockControllers = false;
+
+    #games = 0;
+    #wins = 0;
+
+    #boardWidth;
+    #boardHeight;
     register() {
-        this.iLoader.registerLoader("Words", (key, url) => fetch(url)
-        .then(response => response.text()));
-        this.iLoader.addWords("englishNouns", _settings_js__WEBPACK_IMPORTED_MODULE_1__.settings.words_list_url);
-        this.#letterNum = _settings_js__WEBPACK_IMPORTED_MODULE_1__.settings.letterNum;
-        this.#attempts = _settings_js__WEBPACK_IMPORTED_MODULE_1__.settings.attempts;
+        const settings = this.systemSettings.customSettings;
+        this.iLoader.registerLoader("Words", (key, url) => fetch(url).then(response => response.text()));
+        this.iLoader.addWords("englishNouns", settings.words_list_url);
+        this.#letterNum = settings.letterNum;
+        this.#attempts = settings.attempts;
+        this.#letterCardSize = settings.letterCardSize;
+        this.#letterCardSpaces = settings.letterCardSpaces;
     }
 
     init() {
-        const [w, h] = this.stageData.canvasDimensions;
-        
-        this.background = this.draw.rect(0, 0, w, h, "rgba(120, 120, 120, 0.6)");
-
-        const allWords = this.iLoader.getWords("englishNouns");
-        // filter letters with letters number: this.#letterNum
-        console.log(allWords);
-        //this.#wordList
-        //this.#wordToGuess = this.#randomWord(this.#wordList, this.#letterNum);
-        
-        for (let i = 0; i < this.#attempts; i++) {
-            for (let i = 0; i < this.#letterNum; i++) {
-
-            }
-        }
+        //this.#startGame();
     }
 
     start() {
@@ -7033,17 +7527,191 @@ class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
     registerEventListeners() {
         const canvas = this.canvasHtmlElement; 
         canvas.addEventListener("mousemove", this.#mouseHoverEvent);            
-        canvas.addEventListener("click", this.#mouseClickEvent);
-        document.addEventListener("keydown", this.#pressKeyAction);
-        
+        document.addEventListener("click", this.#mouseClickEvent);
+        document.addEventListener("keydown", this.#pressKeyboardButton);
     }
 
     #mouseHoverEvent = (event) => {
     };
 
     #mouseClickEvent = (event) => {
+        const button = event.target.dataset;
+        
+        if (button.action) {
+            switch (button.action) {
+                case "input":
+                    if (this.#win || this.#loose || this.#blockControllers) {
+                        return false;
+                    }
+                    const letter = button.value;
+                    this.#pressKeyButton(letter);
+                    break;
+                case "clear":
+                    if (this.#win || this.#loose || this.#blockControllers) {
+                        return false;
+                    }
+                    this.#pressBackButton();
+                    break;
+                case "confirm":
+                    if (this.#win || this.#loose || this.#blockControllers) {
+                        return false;
+                    }
+                    this.#pressConfirmButton();
+                    break;
+                case "next_screen":
+                    this.#switchScreen();
+                    this.#startGame();
+                    break;
+                case "game_over":
+                    if (this.#win === false && this.#loose === false) {
+                        this.#gameOver();
+                    }
+                    break;
+                case "reset":
+                    if (this.#win === false && this.#loose === false) {
+                        this.#gameOver(false);
+                        this.#startGame();
+                    } else {
+                        this.#startGame();
+                    }
+                    break;
+                default:
+                    break;
 
-    };
+            }
+        } else {
+            console.log("clicked something else");
+            // popup logic here
+        }
+    }
+
+    #cleanupRows = () => {
+        return new Promise((resolve, reject) => {
+            const len = this.#rows.length;
+            if (len > 0) {
+                for (let i = 0; i < len; i++) {
+                    const row = this.#rows[i];
+                    for (let j = 0; j < row.length; j++) {
+                        const element = row[j];
+                        element.card.destroy();
+                        if (element.letter) {
+                            element.letter.destroy();
+                        }
+                    }
+                }
+                resolve();
+            } else {
+                resolve();
+            }
+        });
+    }
+
+    #fillEmptyCells = () => {
+        const letterNum = this.#letterNum,
+            letterCardSize = this.#letterCardSize,
+            letterCardSpace = this.#letterCardSpaces;
+        for (let i = 0; i < this.#attempts; i++) {
+            const row = [],
+                marginTop = i * letterCardSize + (i > 0 ? i * this.#letterCardSpaces : 0);
+            for (let j = 0; j < this.#letterNum; j++) {
+                const marginLeft = j * letterCardSize + (j > 0 ? j *this.#letterCardSpaces : 0);
+                const letterCard = this.draw.rotateYObject(marginLeft, marginTop, letterCardSize, letterCardSize, "rgba(0, 0, 0, 1)");
+                row.push({letter: null, card: letterCard});
+            }
+            this.#rows[i] = row;
+        }
+    }
+
+    #isWordExist = (word) => {
+        return this.#wordList.find((wordInList) => wordInList === word);
+    }
+
+    #checkWord = (word) => {
+        const len = this.#letterNum,
+            currentRowIndex = this.#currentAttempt - 1;
+
+        let matchIndexesInput = [],
+            matchIndexesGuess = [];
+        let cardsColored = [];
+        for (let i = 0; i < len; i++) {
+            const inputLetter = word[i],
+                //uniqMatchIndex = Array.from(this.#guessWord.word).findIndex((letter, index) => (letter === inputLetter) && (this.#guessWord.isWordChecked(index) === false)), 
+                guessLetter = this.#guessWord[i],
+                letterCard = this.#rows[currentRowIndex][i];
+            if (inputLetter === guessLetter) {
+                //letterCard.card.bgColor = "rgba(253, 208, 53, 1)";
+                //letterCard.letter.fillStyle = "rgba(0, 0, 0, 1)";
+                matchIndexesInput.push(i);
+                matchIndexesGuess.push(i);
+                letterCard.color = "yellow";
+                letterCard.index = i;
+                cardsColored.push(letterCard);
+            }
+        }
+        for (let j = 0; j < len; j++) {
+            if (!matchIndexesInput.includes(j)) {
+                const inputLetter = word[j],
+                    letterCard = this.#rows[currentRowIndex][j];
+
+                const guessIndex = this.#guessWord.split("").findIndex((letter, index) => ((letter === inputLetter) && (!matchIndexesGuess.includes(index))));
+                
+                if (guessIndex !== -1) {
+                    //letterCard.card.bgColor = "rgba(211, 211, 211, 1)";
+                    //letterCard.letter.fillStyle = "rgba(0, 0, 0, 1)";
+                    matchIndexesInput.push(j);
+                    matchIndexesGuess.push(guessIndex);
+
+                    letterCard.color = "light-grey";
+                    letterCard.index = j;
+                    cardsColored.push(letterCard);
+                } else {
+                    const noMatch = this.#guessWord.indexOf(inputLetter) === -1;
+                    //letterCard.card.bgColor = "rgba(51, 51, 51, 1)";
+                    //letterCard.card
+                    letterCard.color = "dark-grey";
+                    letterCard.index = j;
+                    cardsColored.push(letterCard);
+                    if (noMatch) {
+                        this.#markButton(inputLetter);
+                    }
+                }
+            }
+        }
+        cardsColored.sort((a, b) => a.index - b.index);
+        
+        return cardsColored;
+    }
+
+    #increaseAttempt() {
+        if (this.#currentAttempt === this.#attempts) {
+            this.#gameOver();
+        } else {
+            this.#currentAttempt += 1;
+            this.#currentWord = "";
+        }
+    }
+
+    #increaseGameWins = () => {
+        this.#games +=1;
+        if (this.#win) {
+            this.#wins += 1;
+            document.getElementById("wins").innerText = this.#wins;
+        }
+        document.getElementById("games").innerText = this.#games;
+    }
+
+    #markButton = (letter) => {
+        const keyboardLetter = document.querySelector(`[data-value="${letter}"]`);
+        
+        keyboardLetter.classList.add("marked");
+    }
+
+    #cleanupMarks = () => {
+        const buttons = document.getElementsByTagName("button");
+        for (const button of buttons) {
+            button.classList.remove("marked");
+        }
+    }
 
     #loaderErrorHandler = (error) => {
         console.log("--->>>>error");
@@ -7053,12 +7721,283 @@ class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
     unregisterEventListeners() {
     }
 
-    #pressKeyAction = (event) => {
-        console.log("press key, " + event.code);
+    #pressKeyButton = (letter) => {
+        const currentWord = this.#currentWord,
+            currentLetterLength = currentWord.length,
+            confirmButton = document.getElementById("confirm"),
+            currentRowIndex = this.#currentAttempt - 1,
+            nextLetter = this.#rows[currentRowIndex][currentLetterLength],
+            nextLetterCard = nextLetter ? nextLetter.card : null;
+
+        if (currentLetterLength !== this.#letterNum) {
+            this.#currentWord += letter;
+            this.#rows[currentRowIndex][currentLetterLength].letter = this.draw.rotateYText(nextLetterCard.x + nextLetterCard.width / 3.2, nextLetterCard.y + nextLetterCard.height - nextLetterCard.height / 10, letter, "50px sans-serif", "white");
+            if (currentLetterLength + 1 === this.#letterNum) {
+                confirmButton.disabled = false;
+            }
+        }
+    }
+
+    #pressBackButton = () => {
+        const currentLetterLength = this.#currentWord.length,
+            confirmButton = document.getElementById("confirm"),
+            currentRowIndex = this.#currentAttempt - 1,
+            letterCard = this.#rows[currentRowIndex][currentLetterLength - 1];
+
+        if (currentLetterLength > 0) {
+            letterCard.letter.destroy();
+            letterCard.letter = null;
+            this.#currentWord = this.#currentWord.slice(0, -1);
+        }
+        if (confirmButton.disabled === false) {
+            confirmButton.disabled = true;
+        }
+    }
+
+    #pressConfirmButton = () => {
+        const currentWord = this.#currentWord,
+            confirmButton = document.getElementById("confirm");
+            
+        if (this.#isWordExist(currentWord)) {
+            this.#blockControllers = true;
+            //word exist check it
+            const cardsColored = this.#checkWord(currentWord);
+            cardsColored.sort();
+            this.#openCards(cardsColored).then(() => {
+                this.#blockControllers = false;
+                if (currentWord === this.#guessWord) {
+                    this.#win = true;
+                    setTimeout(() => this.#showWin(), 500);
+                    this.#increaseGameWins();
+                } else {
+                    this.#increaseAttempt();
+                    confirmButton.disabled = true;
+                }
+            });
+        } else {
+            alert("Введите английское существительное!");
+        }
+    }
+
+    #pressKeyboardButton = (event) => {
+        const buttonKey = event.key;
+        if (this.#win || this.#loose || this.#blockControllers) {
+            return false;
+        }
+        switch (buttonKey) {
+            case "q":
+            case "w":
+            case "e":
+            case "r":
+            case "t":
+            case "y": 
+            case "u":
+            case "i":
+            case "o":
+            case "p":
+            case "a":
+            case "s":
+            case "d":
+            case "f":
+            case "g":
+            case "h":
+            case "j":
+            case "k":
+            case "l":
+            case "z":
+            case "x":
+            case "c":
+            case "v":
+            case "b":
+            case "n":
+            case "m":
+                this.#pressKeyButton(buttonKey);
+                break;
+            case "Backspace":
+                this.#pressBackButton();
+                break;
+            case "Enter":
+                console.log("confirm");
+                this.#pressConfirmButton();
+                break;
+        }
     };
 
-    #randomWord = (words, letters) => {
-        Math.random()
+    #randomWord = (words) => {
+        const len = words.length;
+        const randIndex = Math.floor(Math.random() * len);
+        return words[randIndex];
+    }
+
+    #openCards = async(cardsColored) => {
+        for (let i = 0; i < cardsColored.length; i++) {
+            const element = cardsColored[i];
+            
+            await this.#openCard(element);
+        }
+        return Promise.resolve();
+    }
+
+    #openCard = async (el) => {
+        return new Promise((resolve, reject) => {
+            const color = el.color,
+            card = el.card,
+            letter = el.letter;
+            
+            let isDone = false;
+            const rotate = setInterval(() => {
+                if (card.rotation >= Math.PI) {
+                    clearInterval(rotate);
+                    resolve();
+                }
+                if (card.rotation >= Math.PI / 2) {
+                    letter.rotateClockWise();
+                    
+                    switch (color) {
+                        case "yellow":
+                            letter.fillStyle = "rgba(0, 0, 0, 1)";
+                            card.bgColor = "rgba(253, 208, 53, 1)";
+                            break;
+                        case "light-grey":
+                            letter.fillStyle = "rgba(0, 0, 0, 1)";
+                            card.bgColor = "rgba(211, 211, 211, 1)";
+                            break;
+                        case "dark-grey":
+                            letter.fillStyle = "rgba(255, 255, 255, 1)";
+                            card.bgColor = "rgba(51, 51, 51, 1)";
+                            break;
+                    }
+                } else {
+                    letter.rotateAnticlockwise();
+                    //letter.bgColor = "rgba(0,0,0,1)";
+                    //card.bgColor = "rgba(0,0,0,1)";
+                }
+                card.rotate();
+            } );
+        });
+    }
+
+    #switchScreen = () => {
+        console.log("switch screen");
+        document.getElementById("first_screen").style.display = "none";
+        document.getElementById("second_screen").style.display = "block";
+    }
+
+    #gameOver = (showMessage = true) => {
+        const apiKey = this.systemSettings.customSettings.yandex_api_key;
+        
+        fetch("https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=" + apiKey + "&lang=en-ru&text=" + this.#guessWord)
+            .then((result) => result.json())
+            .then((result) => {
+                console.log(result);
+                const noun = result.def.find((param) => param.pos === "noun"),
+                    words = noun ? noun.tr : null;
+                    
+                let meanString = "";
+                if (words) {
+                    words.forEach((element, index) => {
+                        meanString += element.text + (index !== words.length - 1 ? ", " : ".");
+                    });
+                }
+                if (showMessage) {
+                    this.#showPopup("<h3>Вы проиграли!!!</h3><p>Загаданное слово: </p><p><b>" + this.#guessWord + (words ? "</b> - " + meanString + "</p>" : ""));
+                }
+            });
+        this.#loose = true;
+        this.#increaseGameWins();
+    }
+
+    #showWin = () => {
+        const apiKey = this.systemSettings.customSettings.yandex_api_key;
+        
+        fetch("https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=" + apiKey + "&lang=en-ru&text=" + this.#guessWord)
+            .then((result) => result.json())
+            .then((result) => {
+                
+                const noun = result.def.find((param) => param.pos === "noun"),
+                    words = noun ? noun.tr : null;
+                    
+                let meanString = "";
+                if (words) {
+                    words.forEach((element, index) => {
+                        meanString += element.text + (index !== words.length - 1 ? ", " : ".");
+                    });
+                }
+            
+                this.#showPopup("<h3>Вы победили!!!</h3><p><b>" + this.#guessWord + (words ? "</b> - " + meanString + "</p>" : ""));
+            });
+    }
+
+    #showPopup = (message) => {
+        const popup = document.getElementById("popup"),
+            gameDiv = document.getElementById("game"),
+            messageDiv = document.getElementById("message");
+
+        messageDiv.innerHTML = message;
+        document.getElementById("overlay").style.display = "block";
+        popup.style.left = gameDiv.offsetLeft + "px";
+        popup.style.display = "block";
+        if (window.innerWidth - 60 > popup.offsetWidth) {
+            popup.style.left = window.innerWidth / 2 - popup.offsetWidth / 2 + "px"; 
+        }
+        popup.style.top = window.innerHeight / 2 - popup.offsetHeight / 2 + "px"; 
+
+    }
+
+    #hidePopup = () => {
+        document.getElementById("popup").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+    }
+
+    #startGame = () => {
+        console.log("--->>>start game");
+        document.getElementById("reset").blur();
+        const superEasy = document.getElementById("contactChoice1"),
+            easy = document.getElementById("contactChoice2"),
+            hard = document.getElementById("contactChoice4"),
+            confirmButton = document.getElementById("confirm");
+
+        this.#hidePopup();
+        confirmButton.disbled = true;
+        if (superEasy.checked) {
+            console.log("set 3");
+            this.#letterNum = 3;
+        } else if (easy.checked) {
+            this.#letterNum = 4;
+        } else if (hard.checked) {
+            this.#letterNum = 6;
+        }
+
+        const letterNum = this.#letterNum,
+            letterCardSize = this.#letterCardSize,
+            letterCardSpace = this.#letterCardSpaces,
+            attempts = this.#attempts,
+            w = letterNum * letterCardSize + ((letterNum - 1) * letterCardSpace),
+            h = attempts * letterCardSize + ((attempts - 1) * letterCardSpace);
+        
+        this.#boardWidth = w;
+        this.#boardHeight = h;
+
+        this.systemSettings.canvasMaxSize.width = w;
+        this.systemSettings.canvasMaxSize.height = h;
+
+        //this._resize();
+        this.iSystem.iRender.fixCanvasSize();
+
+        const allWords = this.iLoader.getWords("englishNouns");
+        // filter letters with letters number: this.#letterNum
+        this.#wordList = allWords.split("\r\n").filter((word) => word.length === letterNum);
+
+        this.#cleanupMarks();
+        this.#currentAttempt = 1;
+        this.#currentWord = "";
+        this.#win = false;
+        this.#loose = false;
+        this.#blockControllers = false;
+        this.#guessWord = this.#randomWord(this.#wordList);
+        this.#cleanupRows().then(() => {
+            return this.#fillEmptyCells();
+        });
     }
 }
 
@@ -7301,16 +8240,41 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordsGame_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./wordsGame.js */ "./src/wordsGame.js");
 /* harmony import */ var jsge__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jsge */ "./node_modules/jsge/src/index.js");
+/* harmony import */ var _settings_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./settings.js */ "./src/settings.js");
+/* harmony import */ var _rotateYObject_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./rotateYObject.js */ "./src/rotateYObject.js");
+/* harmony import */ var _rotateYProgram_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./rotateYProgram.js */ "./src/rotateYProgram.js");
 
 
 
-const app = new jsge__WEBPACK_IMPORTED_MODULE_1__.System(jsge__WEBPACK_IMPORTED_MODULE_1__.SystemSettings);
 
-app.registerStage("WordsGame", _wordsGame_js__WEBPACK_IMPORTED_MODULE_0__.WordsGame);
 
-app.preloadAllData().then(() => {
-    app.iSystem.startGameStage("WordsGame");
+
+
+
+
+jsge__WEBPACK_IMPORTED_MODULE_1__.SystemSettings.customSettings = _settings_js__WEBPACK_IMPORTED_MODULE_2__.settings;
+
+document.addEventListener("DOMContentLoaded", function(event) { 
+    //do work
+    console.log("start app to: ", document.getElementById("game"));
+    const app = new jsge__WEBPACK_IMPORTED_MODULE_1__.System(jsge__WEBPACK_IMPORTED_MODULE_1__.SystemSettings, document.getElementById("game"));
+
+    app.iSystem.iExtension.registerAndCompileWebGlProgram("rotateYProgram", _rotateYProgram_js__WEBPACK_IMPORTED_MODULE_4__.primitivesVertexShader, _rotateYProgram_js__WEBPACK_IMPORTED_MODULE_4__.primitivesFragmentShader, _rotateYProgram_js__WEBPACK_IMPORTED_MODULE_4__.primitivesUniforms, _rotateYProgram_js__WEBPACK_IMPORTED_MODULE_4__.primitivesAttributes);
+    app.iSystem.iExtension.registerDrawObject("rotateYObject", _rotateYObject_js__WEBPACK_IMPORTED_MODULE_3__.createRotateYDrawObjectInstance);
+    app.iSystem.iExtension.registerObjectRender(_rotateYObject_js__WEBPACK_IMPORTED_MODULE_3__.RotateYRect.name, _rotateYObject_js__WEBPACK_IMPORTED_MODULE_3__.drawRotateYObject, "rotateYProgram");
+
+    app.iSystem.iExtension.registerAndCompileWebGlProgram("rotateYTextProgram", _rotateYProgram_js__WEBPACK_IMPORTED_MODULE_4__.imgVertexShader, _rotateYProgram_js__WEBPACK_IMPORTED_MODULE_4__.imgFragmentShader, _rotateYProgram_js__WEBPACK_IMPORTED_MODULE_4__.imgUniforms, _rotateYProgram_js__WEBPACK_IMPORTED_MODULE_4__.imgAttributes);
+    app.iSystem.iExtension.registerDrawObject("rotateYText", _rotateYObject_js__WEBPACK_IMPORTED_MODULE_3__.createRotateYTextInstance);
+    app.iSystem.iExtension.registerObjectRender(_rotateYObject_js__WEBPACK_IMPORTED_MODULE_3__.RotateYText.name, _rotateYObject_js__WEBPACK_IMPORTED_MODULE_3__.drawRotateYText, "rotateYTextProgram");
+
+    app.registerStage("WordsGame", _wordsGame_js__WEBPACK_IMPORTED_MODULE_0__.WordsGame);
+
+    app.preloadAllData().then(() => {
+        app.iSystem.startGameStage("WordsGame");
+    });
 });
+
+
 })();
 
 
