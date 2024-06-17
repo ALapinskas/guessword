@@ -1,4 +1,5 @@
 import { GameStage } from "jsge";
+import { RotateYText } from "./rotateYObject.js";
 
 const MATCH = {
     NO_MATCH: 0,
@@ -35,6 +36,8 @@ export class WordsGame extends GameStage {
 
     #boardWidth;
     #boardHeight;
+
+    #lettersMap = new Map();
     register() {
         const settings = this.systemSettings.customSettings;
         this.iLoader.registerLoader("Words", (key, url) => fetch(url).then(response => response.text()));
@@ -43,6 +46,7 @@ export class WordsGame extends GameStage {
         this.#attempts = settings.attempts;
         this.#letterCardSize = settings.letterCardSize;
         this.#letterCardSpaces = settings.letterCardSpaces;
+        this.#createLettersMap();
     }
 
     init() {
@@ -254,6 +258,37 @@ export class WordsGame extends GameStage {
     unregisterEventListeners() {
     }
 
+    #createLettersMap = () => {
+        this.#lettersMap.set("q", new RotateYText(0, 0, "q", "50px sans-serif", "white"));
+        this.#lettersMap.set("w", new RotateYText(0, 0, "w", "50px sans-serif", "white"));
+        this.#lettersMap.set("e", new RotateYText(0, 0, "e", "50px sans-serif", "white"));
+        this.#lettersMap.set("r", new RotateYText(0, 0, "r", "50px sans-serif", "white"));
+        this.#lettersMap.set("t", new RotateYText(0, 0, "t", "50px sans-serif", "white"));
+        this.#lettersMap.set("y", new RotateYText(0, 0, "y", "50px sans-serif", "white"));
+        this.#lettersMap.set("u", new RotateYText(0, 0, "u", "50px sans-serif", "white"));
+        this.#lettersMap.set("i", new RotateYText(0, 0, "i", "50px sans-serif", "white"));
+        this.#lettersMap.set("o", new RotateYText(0, 0, "o", "50px sans-serif", "white"));
+        this.#lettersMap.set("p", new RotateYText(0, 0, "p", "50px sans-serif", "white"));
+
+        this.#lettersMap.set("a", new RotateYText(0, 0, "a", "50px sans-serif", "white"));
+        this.#lettersMap.set("s", new RotateYText(0, 0, "s", "50px sans-serif", "white"));
+        this.#lettersMap.set("d", new RotateYText(0, 0, "d", "50px sans-serif", "white"));
+        this.#lettersMap.set("f", new RotateYText(0, 0, "f", "50px sans-serif", "white"));
+        this.#lettersMap.set("g", new RotateYText(0, 0, "g", "50px sans-serif", "white"));
+        this.#lettersMap.set("h", new RotateYText(0, 0, "h", "50px sans-serif", "white"));
+        this.#lettersMap.set("j", new RotateYText(0, 0, "j", "50px sans-serif", "white"));
+        this.#lettersMap.set("k", new RotateYText(0, 0, "k", "50px sans-serif", "white"));
+        this.#lettersMap.set("l", new RotateYText(0, 0, "l", "50px sans-serif", "white"));
+
+        this.#lettersMap.set("z", new RotateYText(0, 0, "z", "50px sans-serif", "white"));
+        this.#lettersMap.set("x", new RotateYText(0, 0, "x", "50px sans-serif", "white"));
+        this.#lettersMap.set("c", new RotateYText(0, 0, "c", "50px sans-serif", "white"));
+        this.#lettersMap.set("v", new RotateYText(0, 0, "v", "50px sans-serif", "white"));
+        this.#lettersMap.set("b", new RotateYText(0, 0, "b", "50px sans-serif", "white"));
+        this.#lettersMap.set("n", new RotateYText(0, 0, "n", "50px sans-serif", "white"));
+        this.#lettersMap.set("m", new RotateYText(0, 0, "m", "50px sans-serif", "white"));
+    }
+
     #pressKeyButton = (letter) => {
         const currentWord = this.#currentWord,
             currentLetterLength = currentWord.length,
@@ -264,7 +299,12 @@ export class WordsGame extends GameStage {
 
         if (currentLetterLength !== this.#letterNum) {
             this.#currentWord += letter;
-            this.#rows[currentRowIndex][currentLetterLength].letter = this.draw.rotateYText(nextLetterCard.x + nextLetterCard.width / 3.2, nextLetterCard.y + nextLetterCard.height - nextLetterCard.height / 10, letter, "50px sans-serif", "white");
+            const x = nextLetterCard.x + nextLetterCard.width / 3.2,
+                y = nextLetterCard.y + nextLetterCard.height - nextLetterCard.height / 10,
+                letterCard = this.#lettersMap.get(letter).clone(x, y);
+
+            this.addRenderObject(letterCard);
+            this.#rows[currentRowIndex][currentLetterLength].letter = letterCard;
             if (currentLetterLength + 1 === this.#letterNum) {
                 confirmButton.disabled = false;
             }

@@ -1,6 +1,7 @@
 import { DrawRectObject } from "jsge/src/base/DrawRectObject.js";
-import { DrawTextObject } from "jsge/src/base/DrawTextObject.js";
 import { TextureStorage } from "jsge/src/base/WebGl/TextureStorage.js";
+import { DrawShapeObject } from "jsge/src/base/DrawShapeObject.js";
+import { Rectangle } from "jsge/src/base/Primitives.js";
 class RotateYRect extends DrawRectObject {
     z = 0;
     originalXPos;
@@ -40,18 +41,221 @@ class RotateYRect extends DrawRectObject {
     }
 }
 
-class RotateYText extends DrawTextObject {
+class RotateYText extends DrawShapeObject {
     z = 0;
     originalXPos;
-    constructor(mapX, mapY, text, font, fillStyle) {
-        super(mapX, mapY, text, font, fillStyle);
+    #font;
+    #textAlign;
+    #textBaseline;
+    #fillStyle;
+    #strokeStyle;
+    #text;
+    #textMetrics;
+    #textureCanvas;
+
+    #textureStorage;
+    constructor(mapX, mapY, text, font, fillStyle, texture, textureCanvas) {
+        super("text", mapX, mapY);
         this.originalXPos = mapX;
         //console.log("card width: ", this.boundariesBox.width);
         //setInterval(() => {
         //    this.rotate();
         //}, 100);
-        
+        this.#text = text;
+        this.#font = font;
+        this.#fillStyle = fillStyle;
+        this.#textMetrics;
+        if (!texture) {
+            this.#textureCanvas = document.createElement("canvas");
+            this.#calculateCanvasTextureAndMeasurements();
+        } else {
+            this._textureStorage = texture;
+            this.#textureCanvas = textureCanvas;
+        }
     }
+    /**
+     * Rectangle text box.
+     * @type {Rectangle}
+     */
+    get boundariesBox() {
+        const width = this.textMetrics ? Math.floor(this.textMetrics.width) : 300,
+            height = this.textMetrics ? Math.floor(this.textMetrics.fontBoundingBoxAscent + this.textMetrics.fontBoundingBoxDescent): 30;
+        return new Rectangle(this.x, this.y - height, width, height);
+    }
+
+    get vertices() {
+        const bb = this.boundariesBox;
+        return this._calculateRectVertices(bb.width, bb.height);
+    }
+
+    /**
+     * @type {string}
+     */
+    get text() {
+        return this.#text;
+    }
+
+    set text(value) {
+        if (value !== this.#text) {
+            this.#text = value;
+            this.#calculateCanvasTextureAndMeasurements();
+        }
+    }
+
+    /**
+     * @type {string}
+     */
+    get font() {
+        return this.#font;
+    }
+
+    set font(value) {
+        if (value !== this.#font) {
+            this.#font = value;
+            this.#calculateCanvasTextureAndMeasurements();
+        }
+    }
+
+    /**
+     * @type {string}
+     */
+    get textAlign() {
+        return this.#textAlign;
+    }
+
+    set textAlign(value) {
+        if (value !== this.#textAlign) {
+            this.#textAlign = value;
+            this.#calculateCanvasTextureAndMeasurements();
+        }
+    }
+
+    /**
+     * @type {string}
+     */
+    get textBaseline() {
+        return this.#textBaseline;
+    }
+
+    set textBaseline(value) {
+        if (value !== this.#textBaseline) {
+            this.#textBaseline = value;
+            this.#calculateCanvasTextureAndMeasurements();
+        }
+    }
+
+    /**
+     * font color
+     * @type {string}
+     */
+    get fillStyle() {
+        return this.#fillStyle;
+    }
+
+    /**
+     * font color
+     */
+    set fillStyle(value) {
+        if (value !== this.#fillStyle) {
+            this.#fillStyle = value;
+            this.#calculateCanvasTextureAndMeasurements();
+        }
+    }
+
+    /**
+     * font stroke color
+     * @type {string}
+     */
+    get strokeStyle() {
+        return this.#strokeStyle;
+    }
+
+    /**
+     * font stroke color
+     */
+    set strokeStyle(value) {
+        if (value !== this.#strokeStyle) {
+            this.#strokeStyle = value;
+            this.#calculateCanvasTextureAndMeasurements();
+        }
+    }
+
+    /**
+     * @type {TextMetrics}
+     */
+    get textMetrics() {
+        return this.#textMetrics;
+    }
+
+    /**
+     * @ignore
+     */
+    set _textMetrics(value) {
+        this.#textMetrics = value;
+    }
+
+    /**
+     * @ignore
+     */
+    get _textureStorage() {
+        return this.#textureStorage;
+    }
+
+    /**
+     * @ignore
+     */
+    set _textureStorage(texture) {
+        this.#textureStorage = texture;
+    }
+
+    /**
+     * @ignore
+     */
+    get _textureCanvas() {
+        return this.#textureCanvas;
+    }
+
+    /**
+     * 
+     * @returns {void}
+     */
+    #calculateCanvasTextureAndMeasurements() {
+        const ctx = this.#textureCanvas.getContext("2d", { willReadFrequently: true }); // cpu counting instead gpu
+        if (ctx) {
+            //ctx.clearRect(0, 0, this.#textureCanvas.width, this.#textureCanvas.height);
+            ctx.font = this.font;
+            this._textMetrics = ctx.measureText(this.text);
+            const boxWidth = this.boundariesBox.width, 
+                boxHeight = this.boundariesBox.height;
+            
+            ctx.canvas.width = boxWidth;
+            ctx.canvas.height = boxHeight;
+            // after canvas resize, have to cleanup and set the font again
+            ctx.clearRect(0, 0, boxWidth, boxHeight);
+            ctx.font = this.font;
+            ctx.textBaseline = "bottom";// bottom
+            if (this.fillStyle) {
+                ctx.fillStyle = this.fillStyle;
+                ctx.fillText(this.text, 0, boxHeight);
+            } 
+            if (this.strokeStyle) {
+                ctx.strokeStyle = this.strokeStyle;
+                ctx.strokeText(this.text, 0, boxHeight);
+            }
+            
+            if (this.#textureStorage) {
+                this.#textureStorage._isTextureRecalculated = true;
+            }
+
+            // debug canvas
+            // this.#textureCanvas.style.position = "absolute";
+            // document.body.appendChild(this.#textureCanvas);
+            
+        } else {
+            throw new Error("error creating texture");
+        }
+    }
+
     rotateAnticlockwise = () => {
         const step = 40,
             stepRotation = Math.PI / step, // 3.14 / 10
@@ -67,6 +271,10 @@ class RotateYText extends DrawTextObject {
             
         this.rotation -= stepRotation;
         this.x = this.originalXPos + ((cardWidth - cardWidth * Math.cos(this.rotation)) / 2);
+    }
+
+    clone = (x, y) => {
+        return new RotateYText(x, y, this.text, this.font, this.fillStyle, this._textureStorage, this.#textureCanvas);
     }
 }
 
@@ -219,7 +427,7 @@ const drawRotateYText = (renderObject, gl, pageData, program, vars) => {
     verticesNumber += 6;
     // remove box
     // fix text edges
-    //gl.blendFunc(blend[0], blend[1]);
+    gl.blendFunc(blend[0], blend[1]);
     //
     //var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
     

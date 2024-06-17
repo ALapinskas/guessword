@@ -6979,8 +6979,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   drawRotateYText: () => (/* binding */ drawRotateYText)
 /* harmony export */ });
 /* harmony import */ var jsge_src_base_DrawRectObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jsge/src/base/DrawRectObject.js */ "./node_modules/jsge/src/base/DrawRectObject.js");
-/* harmony import */ var jsge_src_base_DrawTextObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jsge/src/base/DrawTextObject.js */ "./node_modules/jsge/src/base/DrawTextObject.js");
-/* harmony import */ var jsge_src_base_WebGl_TextureStorage_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! jsge/src/base/WebGl/TextureStorage.js */ "./node_modules/jsge/src/base/WebGl/TextureStorage.js");
+/* harmony import */ var jsge_src_base_WebGl_TextureStorage_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jsge/src/base/WebGl/TextureStorage.js */ "./node_modules/jsge/src/base/WebGl/TextureStorage.js");
+/* harmony import */ var jsge_src_base_DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! jsge/src/base/DrawShapeObject.js */ "./node_modules/jsge/src/base/DrawShapeObject.js");
+/* harmony import */ var jsge_src_base_Primitives_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! jsge/src/base/Primitives.js */ "./node_modules/jsge/src/base/Primitives.js");
+
 
 
 
@@ -7023,18 +7025,221 @@ class RotateYRect extends jsge_src_base_DrawRectObject_js__WEBPACK_IMPORTED_MODU
     }
 }
 
-class RotateYText extends jsge_src_base_DrawTextObject_js__WEBPACK_IMPORTED_MODULE_1__.DrawTextObject {
+class RotateYText extends jsge_src_base_DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_2__.DrawShapeObject {
     z = 0;
     originalXPos;
-    constructor(mapX, mapY, text, font, fillStyle) {
-        super(mapX, mapY, text, font, fillStyle);
+    #font;
+    #textAlign;
+    #textBaseline;
+    #fillStyle;
+    #strokeStyle;
+    #text;
+    #textMetrics;
+    #textureCanvas;
+
+    #textureStorage;
+    constructor(mapX, mapY, text, font, fillStyle, texture, textureCanvas) {
+        super("text", mapX, mapY);
         this.originalXPos = mapX;
         //console.log("card width: ", this.boundariesBox.width);
         //setInterval(() => {
         //    this.rotate();
         //}, 100);
-        
+        this.#text = text;
+        this.#font = font;
+        this.#fillStyle = fillStyle;
+        this.#textMetrics;
+        if (!texture) {
+            this.#textureCanvas = document.createElement("canvas");
+            this.#calculateCanvasTextureAndMeasurements();
+        } else {
+            this._textureStorage = texture;
+            this.#textureCanvas = textureCanvas;
+        }
     }
+    /**
+     * Rectangle text box.
+     * @type {Rectangle}
+     */
+    get boundariesBox() {
+        const width = this.textMetrics ? Math.floor(this.textMetrics.width) : 300,
+            height = this.textMetrics ? Math.floor(this.textMetrics.fontBoundingBoxAscent + this.textMetrics.fontBoundingBoxDescent): 30;
+        return new jsge_src_base_Primitives_js__WEBPACK_IMPORTED_MODULE_3__.Rectangle(this.x, this.y - height, width, height);
+    }
+
+    get vertices() {
+        const bb = this.boundariesBox;
+        return this._calculateRectVertices(bb.width, bb.height);
+    }
+
+    /**
+     * @type {string}
+     */
+    get text() {
+        return this.#text;
+    }
+
+    set text(value) {
+        if (value !== this.#text) {
+            this.#text = value;
+            this.#calculateCanvasTextureAndMeasurements();
+        }
+    }
+
+    /**
+     * @type {string}
+     */
+    get font() {
+        return this.#font;
+    }
+
+    set font(value) {
+        if (value !== this.#font) {
+            this.#font = value;
+            this.#calculateCanvasTextureAndMeasurements();
+        }
+    }
+
+    /**
+     * @type {string}
+     */
+    get textAlign() {
+        return this.#textAlign;
+    }
+
+    set textAlign(value) {
+        if (value !== this.#textAlign) {
+            this.#textAlign = value;
+            this.#calculateCanvasTextureAndMeasurements();
+        }
+    }
+
+    /**
+     * @type {string}
+     */
+    get textBaseline() {
+        return this.#textBaseline;
+    }
+
+    set textBaseline(value) {
+        if (value !== this.#textBaseline) {
+            this.#textBaseline = value;
+            this.#calculateCanvasTextureAndMeasurements();
+        }
+    }
+
+    /**
+     * font color
+     * @type {string}
+     */
+    get fillStyle() {
+        return this.#fillStyle;
+    }
+
+    /**
+     * font color
+     */
+    set fillStyle(value) {
+        if (value !== this.#fillStyle) {
+            this.#fillStyle = value;
+            this.#calculateCanvasTextureAndMeasurements();
+        }
+    }
+
+    /**
+     * font stroke color
+     * @type {string}
+     */
+    get strokeStyle() {
+        return this.#strokeStyle;
+    }
+
+    /**
+     * font stroke color
+     */
+    set strokeStyle(value) {
+        if (value !== this.#strokeStyle) {
+            this.#strokeStyle = value;
+            this.#calculateCanvasTextureAndMeasurements();
+        }
+    }
+
+    /**
+     * @type {TextMetrics}
+     */
+    get textMetrics() {
+        return this.#textMetrics;
+    }
+
+    /**
+     * @ignore
+     */
+    set _textMetrics(value) {
+        this.#textMetrics = value;
+    }
+
+    /**
+     * @ignore
+     */
+    get _textureStorage() {
+        return this.#textureStorage;
+    }
+
+    /**
+     * @ignore
+     */
+    set _textureStorage(texture) {
+        this.#textureStorage = texture;
+    }
+
+    /**
+     * @ignore
+     */
+    get _textureCanvas() {
+        return this.#textureCanvas;
+    }
+
+    /**
+     * 
+     * @returns {void}
+     */
+    #calculateCanvasTextureAndMeasurements() {
+        const ctx = this.#textureCanvas.getContext("2d", { willReadFrequently: true }); // cpu counting instead gpu
+        if (ctx) {
+            //ctx.clearRect(0, 0, this.#textureCanvas.width, this.#textureCanvas.height);
+            ctx.font = this.font;
+            this._textMetrics = ctx.measureText(this.text);
+            const boxWidth = this.boundariesBox.width, 
+                boxHeight = this.boundariesBox.height;
+            
+            ctx.canvas.width = boxWidth;
+            ctx.canvas.height = boxHeight;
+            // after canvas resize, have to cleanup and set the font again
+            ctx.clearRect(0, 0, boxWidth, boxHeight);
+            ctx.font = this.font;
+            ctx.textBaseline = "bottom";// bottom
+            if (this.fillStyle) {
+                ctx.fillStyle = this.fillStyle;
+                ctx.fillText(this.text, 0, boxHeight);
+            } 
+            if (this.strokeStyle) {
+                ctx.strokeStyle = this.strokeStyle;
+                ctx.strokeText(this.text, 0, boxHeight);
+            }
+            
+            if (this.#textureStorage) {
+                this.#textureStorage._isTextureRecalculated = true;
+            }
+
+            // debug canvas
+            // this.#textureCanvas.style.position = "absolute";
+            // document.body.appendChild(this.#textureCanvas);
+            
+        } else {
+            throw new Error("error creating texture");
+        }
+    }
+
     rotateAnticlockwise = () => {
         const step = 40,
             stepRotation = Math.PI / step, // 3.14 / 10
@@ -7050,6 +7255,10 @@ class RotateYText extends jsge_src_base_DrawTextObject_js__WEBPACK_IMPORTED_MODU
             
         this.rotation -= stepRotation;
         this.x = this.originalXPos + ((cardWidth - cardWidth * Math.cos(this.rotation)) / 2);
+    }
+
+    clone = (x, y) => {
+        return new RotateYText(x, y, this.text, this.font, this.fillStyle, this._textureStorage, this.#textureCanvas);
     }
 }
 
@@ -7202,14 +7411,14 @@ const drawRotateYText = (renderObject, gl, pageData, program, vars) => {
     verticesNumber += 6;
     // remove box
     // fix text edges
-    //gl.blendFunc(blend[0], blend[1]);
+    gl.blendFunc(blend[0], blend[1]);
     //
     //var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
     
     let textureStorage = renderObject._textureStorage;
     if (!textureStorage) {
         //const activeTexture = gl.getParameter(gl.ACTIVE_TEXTURE);
-        textureStorage = new jsge_src_base_WebGl_TextureStorage_js__WEBPACK_IMPORTED_MODULE_2__.TextureStorage(gl.createTexture());
+        textureStorage = new jsge_src_base_WebGl_TextureStorage_js__WEBPACK_IMPORTED_MODULE_1__.TextureStorage(gl.createTexture());
         renderObject._textureStorage = textureStorage;
     }
     if (textureStorage._isTextureRecalculated === true) {
@@ -7448,7 +7657,7 @@ const settings = {
     attempts: 6,
     letterCardSize: 70,
     letterCardSpaces: 3,
-    yandex_api_key: "dict.1.1.20240613T093817Z.de0dba1b6920ae6d.6cd6abb494861361bfca2d91efef8a45d3436e90",
+    yandex_api_key: "dict.1.1.20240616T070649Z.78c07cd3af68b4d6.c71c1cb194341c724097b0e1e1656e2a4b37f81f",
     words_list_url: "/sites/default/files/words.txt"//"words.txt"//
 }
 
@@ -7465,6 +7674,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   WordsGame: () => (/* binding */ WordsGame)
 /* harmony export */ });
 /* harmony import */ var jsge__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jsge */ "./node_modules/jsge/src/index.js");
+/* harmony import */ var _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./rotateYObject.js */ "./src/rotateYObject.js");
+
 
 
 const MATCH = {
@@ -7502,6 +7713,8 @@ class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
 
     #boardWidth;
     #boardHeight;
+
+    #lettersMap = new Map();
     register() {
         const settings = this.systemSettings.customSettings;
         this.iLoader.registerLoader("Words", (key, url) => fetch(url).then(response => response.text()));
@@ -7510,6 +7723,7 @@ class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
         this.#attempts = settings.attempts;
         this.#letterCardSize = settings.letterCardSize;
         this.#letterCardSpaces = settings.letterCardSpaces;
+        this.#createLettersMap();
     }
 
     init() {
@@ -7721,6 +7935,37 @@ class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
     unregisterEventListeners() {
     }
 
+    #createLettersMap = () => {
+        this.#lettersMap.set("q", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "q", "50px sans-serif", "white"));
+        this.#lettersMap.set("w", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "w", "50px sans-serif", "white"));
+        this.#lettersMap.set("e", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "e", "50px sans-serif", "white"));
+        this.#lettersMap.set("r", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "r", "50px sans-serif", "white"));
+        this.#lettersMap.set("t", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "t", "50px sans-serif", "white"));
+        this.#lettersMap.set("y", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "y", "50px sans-serif", "white"));
+        this.#lettersMap.set("u", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "u", "50px sans-serif", "white"));
+        this.#lettersMap.set("i", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "i", "50px sans-serif", "white"));
+        this.#lettersMap.set("o", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "o", "50px sans-serif", "white"));
+        this.#lettersMap.set("p", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "p", "50px sans-serif", "white"));
+
+        this.#lettersMap.set("a", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "a", "50px sans-serif", "white"));
+        this.#lettersMap.set("s", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "s", "50px sans-serif", "white"));
+        this.#lettersMap.set("d", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "d", "50px sans-serif", "white"));
+        this.#lettersMap.set("f", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "f", "50px sans-serif", "white"));
+        this.#lettersMap.set("g", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "g", "50px sans-serif", "white"));
+        this.#lettersMap.set("h", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "h", "50px sans-serif", "white"));
+        this.#lettersMap.set("j", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "j", "50px sans-serif", "white"));
+        this.#lettersMap.set("k", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "k", "50px sans-serif", "white"));
+        this.#lettersMap.set("l", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "l", "50px sans-serif", "white"));
+
+        this.#lettersMap.set("z", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "z", "50px sans-serif", "white"));
+        this.#lettersMap.set("x", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "x", "50px sans-serif", "white"));
+        this.#lettersMap.set("c", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "c", "50px sans-serif", "white"));
+        this.#lettersMap.set("v", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "v", "50px sans-serif", "white"));
+        this.#lettersMap.set("b", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "b", "50px sans-serif", "white"));
+        this.#lettersMap.set("n", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "n", "50px sans-serif", "white"));
+        this.#lettersMap.set("m", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "m", "50px sans-serif", "white"));
+    }
+
     #pressKeyButton = (letter) => {
         const currentWord = this.#currentWord,
             currentLetterLength = currentWord.length,
@@ -7731,7 +7976,12 @@ class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
 
         if (currentLetterLength !== this.#letterNum) {
             this.#currentWord += letter;
-            this.#rows[currentRowIndex][currentLetterLength].letter = this.draw.rotateYText(nextLetterCard.x + nextLetterCard.width / 3.2, nextLetterCard.y + nextLetterCard.height - nextLetterCard.height / 10, letter, "50px sans-serif", "white");
+            const x = nextLetterCard.x + nextLetterCard.width / 3.2,
+                y = nextLetterCard.y + nextLetterCard.height - nextLetterCard.height / 10,
+                letterCard = this.#lettersMap.get(letter).clone(x, y);
+
+            this.addRenderObject(letterCard);
+            this.#rows[currentRowIndex][currentLetterLength].letter = letterCard;
             if (currentLetterLength + 1 === this.#letterNum) {
                 confirmButton.disabled = false;
             }
@@ -8253,6 +8503,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 jsge__WEBPACK_IMPORTED_MODULE_1__.SystemSettings.customSettings = _settings_js__WEBPACK_IMPORTED_MODULE_2__.settings;
+jsge__WEBPACK_IMPORTED_MODULE_1__.SystemSettings.gameOptions.optimization = "WASM";
+jsge__WEBPACK_IMPORTED_MODULE_1__.SystemSettings.gameOptions.optimizationWASMUrl = "/sites/all/themes/resnew/js/calculateBufferDataWat.wasm";
 
 document.addEventListener("DOMContentLoaded", function(event) { 
     //do work
