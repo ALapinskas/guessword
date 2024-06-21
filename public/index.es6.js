@@ -7038,7 +7038,7 @@ class RotateYText extends jsge_src_base_DrawShapeObject_js__WEBPACK_IMPORTED_MOD
     #textureCanvas;
 
     #textureStorage;
-    constructor(mapX, mapY, text, font, fillStyle, texture, textureCanvas) {
+    constructor(mapX, mapY, text, font, fillStyle, texture, textureCanvas, textMetrics) {
         super("text", mapX, mapY);
         this.originalXPos = mapX;
         //console.log("card width: ", this.boundariesBox.width);
@@ -7055,6 +7055,7 @@ class RotateYText extends jsge_src_base_DrawShapeObject_js__WEBPACK_IMPORTED_MOD
         } else {
             this._textureStorage = texture;
             this.#textureCanvas = textureCanvas;
+            this._textMetrics = textMetrics;
         }
     }
     /**
@@ -7226,9 +7227,10 @@ class RotateYText extends jsge_src_base_DrawShapeObject_js__WEBPACK_IMPORTED_MOD
                 ctx.strokeStyle = this.strokeStyle;
                 ctx.strokeText(this.text, 0, boxHeight);
             }
-            
+            // if we change font style, 
+            // recreate texture to avoid changing all other
             if (this.#textureStorage) {
-                this.#textureStorage._isTextureRecalculated = true;
+                this.#textureStorage = undefined;
             }
 
             // debug canvas
@@ -7258,7 +7260,7 @@ class RotateYText extends jsge_src_base_DrawShapeObject_js__WEBPACK_IMPORTED_MOD
     }
 
     clone = (x, y) => {
-        return new RotateYText(x, y, this.text, this.font, this.fillStyle, this._textureStorage, this.#textureCanvas);
+        return new RotateYText(x, y, this.text, this.font, this.fillStyle, this._textureStorage, this.#textureCanvas, this.textMetrics);
     }
 }
 
@@ -7657,6 +7659,7 @@ const settings = {
     attempts: 6,
     letterCardSize: 70,
     letterCardSpaces: 3,
+    shiftSize: 2,
     yandex_api_key: "dict.1.1.20240616T070649Z.78c07cd3af68b4d6.c71c1cb194341c724097b0e1e1656e2a4b37f81f",
     words_list_url: "/sites/default/files/words.txt"//"words.txt"//
 }
@@ -7686,6 +7689,8 @@ const MATCH = {
 class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
     #letterCardSpaces;
     #letterCardSize;
+
+    #shiftSize;
     #letterNum = 0;
     #attempts = 0;
     #currentAttempt = 1;
@@ -7723,10 +7728,12 @@ class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
         this.#attempts = settings.attempts;
         this.#letterCardSize = settings.letterCardSize;
         this.#letterCardSpaces = settings.letterCardSpaces;
-        this.#createLettersMap();
+        this.#shiftSize = settings.shiftSize;
+        
     }
 
     init() {
+        this.#createLettersMap();
         //this.#startGame();
     }
 
@@ -7808,8 +7815,10 @@ class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
                     for (let j = 0; j < row.length; j++) {
                         const element = row[j];
                         element.card.destroy();
+                        delete element.card;
                         if (element.letter) {
                             element.letter.destroy();
+                            delete element.letter;
                         }
                     }
                 }
@@ -7826,7 +7835,7 @@ class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
             letterCardSpace = this.#letterCardSpaces;
         for (let i = 0; i < this.#attempts; i++) {
             const row = [],
-                marginTop = i * letterCardSize + (i > 0 ? i * this.#letterCardSpaces : 0);
+                marginTop = i * letterCardSize + (i > 0 ? i * this.#letterCardSpaces : 0) + this.#shiftSize;
             for (let j = 0; j < this.#letterNum; j++) {
                 const marginLeft = j * letterCardSize + (j > 0 ? j *this.#letterCardSpaces : 0);
                 const letterCard = this.draw.rotateYObject(marginLeft, marginTop, letterCardSize, letterCardSize, "rgba(0, 0, 0, 1)");
@@ -7936,38 +7945,48 @@ class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
     }
 
     #createLettersMap = () => {
-        this.#lettersMap.set("q", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "q", "50px sans-serif", "white"));
-        this.#lettersMap.set("w", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "w", "50px sans-serif", "white"));
-        this.#lettersMap.set("e", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "e", "50px sans-serif", "white"));
-        this.#lettersMap.set("r", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "r", "50px sans-serif", "white"));
-        this.#lettersMap.set("t", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "t", "50px sans-serif", "white"));
-        this.#lettersMap.set("y", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "y", "50px sans-serif", "white"));
-        this.#lettersMap.set("u", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "u", "50px sans-serif", "white"));
-        this.#lettersMap.set("i", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "i", "50px sans-serif", "white"));
-        this.#lettersMap.set("o", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "o", "50px sans-serif", "white"));
-        this.#lettersMap.set("p", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "p", "50px sans-serif", "white"));
+        // create letters and textures
+        this.#lettersMap.set("q", this.draw.rotateYText(0, 0, "q", "50px sans-serif", "white"));
+        this.#lettersMap.set("w", this.draw.rotateYText(0, 0, "w", "50px sans-serif", "white"));
+        this.#lettersMap.set("e", this.draw.rotateYText(0, 0, "e", "50px sans-serif", "white"));
+        this.#lettersMap.set("r", this.draw.rotateYText(0, 0, "r", "50px sans-serif", "white"));
+        this.#lettersMap.set("t", this.draw.rotateYText(0, 0, "t", "50px sans-serif", "white"));
+        this.#lettersMap.set("y", this.draw.rotateYText(0, 0, "y", "50px sans-serif", "white"));
+        this.#lettersMap.set("u", this.draw.rotateYText(0, 0, "u", "50px sans-serif", "white"));
+        this.#lettersMap.set("i", this.draw.rotateYText(0, 0, "i", "50px sans-serif", "white"));
+        this.#lettersMap.set("o", this.draw.rotateYText(0, 0, "o", "50px sans-serif", "white"));
+        this.#lettersMap.set("p", this.draw.rotateYText(0, 0, "p", "50px sans-serif", "white"));
 
-        this.#lettersMap.set("a", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "a", "50px sans-serif", "white"));
-        this.#lettersMap.set("s", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "s", "50px sans-serif", "white"));
-        this.#lettersMap.set("d", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "d", "50px sans-serif", "white"));
-        this.#lettersMap.set("f", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "f", "50px sans-serif", "white"));
-        this.#lettersMap.set("g", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "g", "50px sans-serif", "white"));
-        this.#lettersMap.set("h", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "h", "50px sans-serif", "white"));
-        this.#lettersMap.set("j", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "j", "50px sans-serif", "white"));
-        this.#lettersMap.set("k", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "k", "50px sans-serif", "white"));
-        this.#lettersMap.set("l", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "l", "50px sans-serif", "white"));
+        this.#lettersMap.set("a", this.draw.rotateYText(0, 0, "a", "50px sans-serif", "white"));
+        this.#lettersMap.set("s", this.draw.rotateYText(0, 0, "s", "50px sans-serif", "white"));
+        this.#lettersMap.set("d", this.draw.rotateYText(0, 0, "d", "50px sans-serif", "white"));
+        this.#lettersMap.set("f", this.draw.rotateYText(0, 0, "f", "50px sans-serif", "white"));
+        this.#lettersMap.set("g", this.draw.rotateYText(0, 0, "g", "50px sans-serif", "white"));
+        this.#lettersMap.set("h", this.draw.rotateYText(0, 0, "h", "50px sans-serif", "white"));
+        this.#lettersMap.set("j", this.draw.rotateYText(0, 0, "j", "50px sans-serif", "white"));
+        this.#lettersMap.set("k", this.draw.rotateYText(0, 0, "k", "50px sans-serif", "white"));
+        this.#lettersMap.set("l", this.draw.rotateYText(0, 0, "l", "50px sans-serif", "white"));
 
-        this.#lettersMap.set("z", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "z", "50px sans-serif", "white"));
-        this.#lettersMap.set("x", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "x", "50px sans-serif", "white"));
-        this.#lettersMap.set("c", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "c", "50px sans-serif", "white"));
-        this.#lettersMap.set("v", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "v", "50px sans-serif", "white"));
-        this.#lettersMap.set("b", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "b", "50px sans-serif", "white"));
-        this.#lettersMap.set("n", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "n", "50px sans-serif", "white"));
-        this.#lettersMap.set("m", new _rotateYObject_js__WEBPACK_IMPORTED_MODULE_1__.RotateYText(0, 0, "m", "50px sans-serif", "white"));
+        this.#lettersMap.set("z", this.draw.rotateYText(0, 0, "z", "50px sans-serif", "white"));
+        this.#lettersMap.set("x", this.draw.rotateYText(0, 0, "x", "50px sans-serif", "white"));
+        this.#lettersMap.set("c", this.draw.rotateYText(0, 0, "c", "50px sans-serif", "white"));
+        this.#lettersMap.set("v", this.draw.rotateYText(0, 0, "v", "50px sans-serif", "white"));
+        this.#lettersMap.set("b", this.draw.rotateYText(0, 0, "b", "50px sans-serif", "white"));
+        this.#lettersMap.set("n", this.draw.rotateYText(0, 0, "n", "50px sans-serif", "white"));
+        this.#lettersMap.set("m", this.draw.rotateYText(0, 0, "m", "50px sans-serif", "white"));
+
+        // remove letters from draw(we need only textures)
+        // make sure all letter textures were created
+        setTimeout(() => {
+            for (const letter of this.#lettersMap.values()) {
+                letter.destroy();
+            }
+        }, 500);
     }
 
     #pressKeyButton = (letter) => {
-        const currentWord = this.#currentWord,
+        const yShift = -this.#shiftSize,
+            currentWord = this.#currentWord,
             currentLetterLength = currentWord.length,
             confirmButton = document.getElementById("confirm"),
             currentRowIndex = this.#currentAttempt - 1,
@@ -7981,7 +8000,14 @@ class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
                 letterCard = this.#lettersMap.get(letter).clone(x, y);
 
             this.addRenderObject(letterCard);
-            this.#rows[currentRowIndex][currentLetterLength].letter = letterCard;
+            nextLetter.letter = letterCard;
+            nextLetter.letter.y += yShift;
+            nextLetter.card.y += yShift;
+
+            setTimeout(() => {
+                nextLetter.letter.y -= yShift;
+                nextLetter.card.y -= yShift;
+            }, 100);
             if (currentLetterLength + 1 === this.#letterNum) {
                 confirmButton.disabled = false;
             }
@@ -8113,7 +8139,8 @@ class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
                             card.bgColor = "rgba(211, 211, 211, 1)";
                             break;
                         case "dark-grey":
-                            letter.fillStyle = "rgba(255, 255, 255, 1)";
+                            // don't change font color
+                            //letter.fillStyle = "rgba(255, 255, 255, 1)";
                             card.bgColor = "rgba(51, 51, 51, 1)";
                             break;
                     }
@@ -8503,8 +8530,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 jsge__WEBPACK_IMPORTED_MODULE_1__.SystemSettings.customSettings = _settings_js__WEBPACK_IMPORTED_MODULE_2__.settings;
-jsge__WEBPACK_IMPORTED_MODULE_1__.SystemSettings.gameOptions.optimization = "WASM";
-jsge__WEBPACK_IMPORTED_MODULE_1__.SystemSettings.gameOptions.optimizationWASMUrl = "/sites/all/themes/resnew/js/calculateBufferDataWat.wasm";
 
 document.addEventListener("DOMContentLoaded", function(event) { 
     //do work

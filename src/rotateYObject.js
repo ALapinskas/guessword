@@ -54,7 +54,7 @@ class RotateYText extends DrawShapeObject {
     #textureCanvas;
 
     #textureStorage;
-    constructor(mapX, mapY, text, font, fillStyle, texture, textureCanvas) {
+    constructor(mapX, mapY, text, font, fillStyle, texture, textureCanvas, textMetrics) {
         super("text", mapX, mapY);
         this.originalXPos = mapX;
         //console.log("card width: ", this.boundariesBox.width);
@@ -71,6 +71,7 @@ class RotateYText extends DrawShapeObject {
         } else {
             this._textureStorage = texture;
             this.#textureCanvas = textureCanvas;
+            this._textMetrics = textMetrics;
         }
     }
     /**
@@ -242,9 +243,10 @@ class RotateYText extends DrawShapeObject {
                 ctx.strokeStyle = this.strokeStyle;
                 ctx.strokeText(this.text, 0, boxHeight);
             }
-            
+            // if we change font style, 
+            // recreate texture to avoid changing all other
             if (this.#textureStorage) {
-                this.#textureStorage._isTextureRecalculated = true;
+                this.#textureStorage = undefined;
             }
 
             // debug canvas
@@ -274,7 +276,7 @@ class RotateYText extends DrawShapeObject {
     }
 
     clone = (x, y) => {
-        return new RotateYText(x, y, this.text, this.font, this.fillStyle, this._textureStorage, this.#textureCanvas);
+        return new RotateYText(x, y, this.text, this.font, this.fillStyle, this._textureStorage, this.#textureCanvas, this.textMetrics);
     }
 }
 
