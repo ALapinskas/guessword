@@ -1,6 +1,6 @@
-import { DrawRectObject } from "jsge/src/base/DrawRectObject.js";
-import { TextureStorage } from "jsge/src/base/WebGl/TextureStorage.js";
-import { DrawShapeObject } from "jsge/src/base/DrawShapeObject.js";
+import { DrawRectObject } from "jsge/src/base/2d/DrawRectObject.js";
+import { ImageTempStorage } from "jsge/src/base/Temp/ImageTempStorage.js";
+import { DrawShapeObject } from "jsge/src/base/2d/DrawShapeObject.js";
 import { Rectangle } from "jsge/src/base/Primitives.js";
 class RotateYRect extends DrawRectObject {
     z = 0;
@@ -436,7 +436,7 @@ const drawRotateYText = (renderObject, gl, pageData, program, vars) => {
     let textureStorage = renderObject._textureStorage;
     if (!textureStorage) {
         //const activeTexture = gl.getParameter(gl.ACTIVE_TEXTURE);
-        textureStorage = new TextureStorage(gl.createTexture());
+        textureStorage = new ImageTempStorage(gl.createTexture());
         renderObject._textureStorage = textureStorage;
     }
     if (textureStorage._isTextureRecalculated === true) {

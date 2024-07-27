@@ -8,6 +8,7 @@ import { RotateYText, createRotateYTextInstance, drawRotateYText } from "./rotat
 import { imgVertexShader, imgFragmentShader, imgUniforms, imgAttributes } from "./rotateYProgram.js";
 
 SystemSettings.customSettings = settings;
+SystemSettings.gameOptions.render.minCycleTime = 32;
 
 document.addEventListener("DOMContentLoaded", function(event) { 
     //do work

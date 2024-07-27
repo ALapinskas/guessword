@@ -14,126 +14,18 @@ const PROGRESS_EVENT_TYPE={loadstart:"loadstart",progress:"progress",abort:"abor
 
 /***/ }),
 
-/***/ "./node_modules/jsge/src/base/AnimationEvent.js":
-/*!******************************************************!*\
-  !*** ./node_modules/jsge/src/base/AnimationEvent.js ***!
-  \******************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   AnimationEvent: () => (/* binding */ AnimationEvent)
-/* harmony export */ });
-class AnimationEvent {
-    #eventName;
-    /**
-     * @type {number}
-     */
-    #defaultDurationTime = 100;
-    /**
-     * Array [sprite index, duration]
-     * @type { Array<Array<number, number>> }
-     */
-    #animationSpriteIndexes;
-    /**
-     * 
-     * @type {number}
-     */
-    #currentAnimationItemIndex;
-    /**
-     * @type {boolean}
-     */
-    #isActive;
-    /**
-     * @type {boolean}
-     */
-    #isRepeated;
-    #lastAnimationTimeStamp;
-    
-    constructor(eventName, animationSpriteIndexes, isRepeated = false, currentSpriteIndex, isActive = false) {
-        this.#eventName = eventName;
-        this.#animationSpriteIndexes = this.#convertToArray(animationSpriteIndexes);
-        this.#currentAnimationItemIndex = currentSpriteIndex ? currentSpriteIndex : 0;
-        this.#isActive = isActive;
-        this.#isRepeated = isRepeated;
-    }
-
-    get name() {
-        return this.#eventName;
-    }
-
-    get isActive() {
-        return this.#isActive;
-    }
-
-    get currentSprite() {
-        return this.#animationSpriteIndexes[this.#currentAnimationItemIndex][0];
-    }
-
-    get _isLastSprite() {
-        return (this.#animationSpriteIndexes.length - 1) === this.#currentAnimationItemIndex;
-    }
-
-    iterateAnimationIndex() {
-        const currentIndex = this.#currentAnimationItemIndex,
-            currentDuration = this.#animationSpriteIndexes[currentIndex][1],
-            lastIterationTime = Date.now() - this.#lastAnimationTimeStamp;
-        // iterate or skip
-        if (currentDuration < lastIterationTime) {
-            if (!this._isLastSprite) {
-                this.#currentAnimationItemIndex++;
-            } else {
-                if (!this.#isRepeated) {
-                    this.deactivateAnimation();
-                } else {
-                    // take first element
-                    this.#currentAnimationItemIndex = 0;
-                    
-                }
-            }
-            // reset timestamp
-            this.#lastAnimationTimeStamp = Date.now();
-        }
-    }
-
-    activateAnimation = () => {
-        this.#isActive = true;
-        this.#currentAnimationItemIndex = 0;
-        this.#lastAnimationTimeStamp = Date.now();
-    };
-
-    deactivateAnimation = () => {
-        this.#isActive = false;
-    };
-
-    #convertToArray(animationSpriteIndexes) {
-        let animationArray = [];
-        animationSpriteIndexes.forEach(element => {
-            if (typeof element.id === "number" && typeof element.duration === "number") {
-                animationArray.push([element.id, element.duration]);
-            } else {
-                animationArray.push([element, this.#defaultDurationTime]);
-            }
-            
-        });
-        return animationArray;
-    }
-}
-
-/***/ }),
-
-/***/ "./node_modules/jsge/src/base/DrawCircleObject.js":
-/*!********************************************************!*\
-  !*** ./node_modules/jsge/src/base/DrawCircleObject.js ***!
-  \********************************************************/
+/***/ "./node_modules/jsge/src/base/2d/DrawCircleObject.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/jsge/src/base/2d/DrawCircleObject.js ***!
+  \***********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   DrawCircleObject: () => (/* binding */ DrawCircleObject)
 /* harmony export */ });
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants.js */ "./node_modules/jsge/src/constants.js");
-/* harmony import */ var _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DrawShapeObject.js */ "./node_modules/jsge/src/base/DrawShapeObject.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../constants.js */ "./node_modules/jsge/src/constants.js");
+/* harmony import */ var _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DrawShapeObject.js */ "./node_modules/jsge/src/base/2d/DrawShapeObject.js");
 
 
 
@@ -184,18 +76,18 @@ class DrawCircleObject extends _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_1__.
 
 /***/ }),
 
-/***/ "./node_modules/jsge/src/base/DrawConusObject.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/jsge/src/base/DrawConusObject.js ***!
-  \*******************************************************/
+/***/ "./node_modules/jsge/src/base/2d/DrawConusObject.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/jsge/src/base/2d/DrawConusObject.js ***!
+  \**********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   DrawConusObject: () => (/* binding */ DrawConusObject)
 /* harmony export */ });
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants.js */ "./node_modules/jsge/src/constants.js");
-/* harmony import */ var _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DrawShapeObject.js */ "./node_modules/jsge/src/base/DrawShapeObject.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../constants.js */ "./node_modules/jsge/src/constants.js");
+/* harmony import */ var _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DrawShapeObject.js */ "./node_modules/jsge/src/base/2d/DrawShapeObject.js");
 
 
 
@@ -276,21 +168,21 @@ class DrawConusObject extends _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_1__.D
 
 /***/ }),
 
-/***/ "./node_modules/jsge/src/base/DrawImageObject.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/jsge/src/base/DrawImageObject.js ***!
-  \*******************************************************/
+/***/ "./node_modules/jsge/src/base/2d/DrawImageObject.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/jsge/src/base/2d/DrawImageObject.js ***!
+  \**********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   DrawImageObject: () => (/* binding */ DrawImageObject)
 /* harmony export */ });
-/* harmony import */ var _AnimationEvent_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AnimationEvent.js */ "./node_modules/jsge/src/base/AnimationEvent.js");
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants.js */ "./node_modules/jsge/src/constants.js");
-/* harmony import */ var _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DrawShapeObject.js */ "./node_modules/jsge/src/base/DrawShapeObject.js");
-/* harmony import */ var _WebGl_TextureStorage_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./WebGl/TextureStorage.js */ "./node_modules/jsge/src/base/WebGl/TextureStorage.js");
-/* harmony import */ var _Exception_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Exception.js */ "./node_modules/jsge/src/base/Exception.js");
+/* harmony import */ var _AnimationEvent_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../AnimationEvent.js */ "./node_modules/jsge/src/base/AnimationEvent.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../constants.js */ "./node_modules/jsge/src/constants.js");
+/* harmony import */ var _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DrawShapeObject.js */ "./node_modules/jsge/src/base/2d/DrawShapeObject.js");
+/* harmony import */ var _Temp_ImageTempStorage_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Temp/ImageTempStorage.js */ "./node_modules/jsge/src/base/Temp/ImageTempStorage.js");
+/* harmony import */ var _Exception_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Exception.js */ "./node_modules/jsge/src/base/Exception.js");
 
 
 
@@ -348,7 +240,7 @@ class DrawImageObject extends _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_2__.D
      */
     #circleBoundaries;
     /**
-     * @type {TextureStorage}
+     * @type {ImageTempStorage}
      */
     #textureStorage;
 
@@ -588,18 +480,18 @@ class DrawImageObject extends _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_2__.D
 
 /***/ }),
 
-/***/ "./node_modules/jsge/src/base/DrawLineObject.js":
-/*!******************************************************!*\
-  !*** ./node_modules/jsge/src/base/DrawLineObject.js ***!
-  \******************************************************/
+/***/ "./node_modules/jsge/src/base/2d/DrawLineObject.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/jsge/src/base/2d/DrawLineObject.js ***!
+  \*********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   DrawLineObject: () => (/* binding */ DrawLineObject)
 /* harmony export */ });
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants.js */ "./node_modules/jsge/src/constants.js");
-/* harmony import */ var _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DrawShapeObject.js */ "./node_modules/jsge/src/base/DrawShapeObject.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../constants.js */ "./node_modules/jsge/src/constants.js");
+/* harmony import */ var _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DrawShapeObject.js */ "./node_modules/jsge/src/base/2d/DrawShapeObject.js");
 
 
 
@@ -636,249 +528,18 @@ class DrawLineObject extends _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_1__.Dr
 
 /***/ }),
 
-/***/ "./node_modules/jsge/src/base/DrawObjectFactory.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/jsge/src/base/DrawObjectFactory.js ***!
-  \*********************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   DrawObjectFactory: () => (/* binding */ DrawObjectFactory)
-/* harmony export */ });
-/* harmony import */ var _DrawRectObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DrawRectObject.js */ "./node_modules/jsge/src/base/DrawRectObject.js");
-/* harmony import */ var _DrawTextObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DrawTextObject.js */ "./node_modules/jsge/src/base/DrawTextObject.js");
-/* harmony import */ var _DrawConusObject_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DrawConusObject.js */ "./node_modules/jsge/src/base/DrawConusObject.js");
-/* harmony import */ var _DrawImageObject_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./DrawImageObject.js */ "./node_modules/jsge/src/base/DrawImageObject.js");
-/* harmony import */ var _DrawLineObject_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./DrawLineObject.js */ "./node_modules/jsge/src/base/DrawLineObject.js");
-/* harmony import */ var _DrawPolygonObject_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./DrawPolygonObject.js */ "./node_modules/jsge/src/base/DrawPolygonObject.js");
-/* harmony import */ var _DrawCircleObject_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./DrawCircleObject.js */ "./node_modules/jsge/src/base/DrawCircleObject.js");
-/* harmony import */ var _DrawTiledLayer_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./DrawTiledLayer.js */ "./node_modules/jsge/src/base/DrawTiledLayer.js");
-/* harmony import */ var _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./DrawShapeObject.js */ "./node_modules/jsge/src/base/DrawShapeObject.js");
-/* harmony import */ var _GameStageData_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./GameStageData.js */ "./node_modules/jsge/src/base/GameStageData.js");
-/* harmony import */ var _Exception_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Exception.js */ "./node_modules/jsge/src/base/Exception.js");
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../constants.js */ "./node_modules/jsge/src/constants.js");
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * Creates drawObjects instances.<br>
- * accessible via GameStage.draw <br>
- * Attach images for image objects and tilemaps <br>
- * Adds drawObjects to current GameStage.stageData
- * @see {@link GameStage} a part of GameStage
- */
-class DrawObjectFactory {
-    /**
-     * @type {AssetsManager}
-     */
-    #iLoader;
-    /**
-     * @type {GameStageData | null}
-     */
-    #currentPageData;
-    /**
-     * @hideconstructor 
-     */
-    constructor(iLoader) {
-        this.#iLoader = iLoader;
-    }
-
-    /**
-     * @returns {GameStageData}
-     */
-    get stageData() {
-        return this.#currentPageData;
-    }
-
-    /**
-     * 
-     * @param {*} renderObject 
-     * @returns {Object}
-     */
-    #addObjectToPageData(renderObject) {
-        this.#currentPageData._renderObject = renderObject;
-        this.#currentPageData._sortRenderObjectsBySortIndex();
-        return renderObject;
-    }
-    /**
-     * @param {number} x 
-     * @param {number} y 
-     * @param {number} width 
-     * @param {number} height 
-     * @param {string} backgroundColor - rgba(r,g,b,a)
-     * @returns {DrawRectObject}
-     */
-    rect(x, y, width, height, backgroundColor) {
-        const renderObject = new _DrawRectObject_js__WEBPACK_IMPORTED_MODULE_0__.DrawRectObject(x, y, width, height, backgroundColor);
-        this.#addObjectToPageData(renderObject);
-        return renderObject; 
-    }
-
-    /**
-     * @param {number} x 
-     * @param {number} y 
-     * @param {string} text 
-     * @param {string} font - size fontFamily
-     * @param {string} color - rgba(r,g,b,a)
-     * @returns {DrawTextObject}
-     */
-    text(x, y, text, font, color) {
-        const renderObject = new _DrawTextObject_js__WEBPACK_IMPORTED_MODULE_1__.DrawTextObject(x, y, text, font, color);
-        this.#addObjectToPageData(renderObject);
-        return renderObject;
-    }
-
-    /**
-     * 
-     * @param {number} radius 
-     * @param {string} bgColor - rgba(r,g,b,a)
-     * @param {number=} angle
-     * @param {number=} [fade=0] (0 - 1)
-     * @returns {DrawConusObject}
-     */
-    conus(x, y, radius, bgColor, angle, fade = 0) {
-        const renderObject = new _DrawConusObject_js__WEBPACK_IMPORTED_MODULE_2__.DrawConusObject(x, y, radius, bgColor, angle, fade);
-        this.#addObjectToPageData(renderObject);
-        return renderObject;
-    }
-
-    /**
-     * 
-     * @param {number} radius 
-     * @param {string} bgColor - rgba(r,g,b,a)
-     * @returns {DrawCircleObject}
-     */
-    circle(x, y, radius, bgColor) {
-        const renderObject = new _DrawCircleObject_js__WEBPACK_IMPORTED_MODULE_6__.DrawCircleObject(x, y, radius, bgColor);
-        this.#addObjectToPageData(renderObject);
-        return renderObject;
-    }
-
-    /**
-     * @param {number} x 
-     * @param {number} y 
-     * @param {number} width 
-     * @param {number} height 
-     * @param {string} key 
-     * @param {number} [imageIndex = 0]
-     * @param {Array<{x:Number, y:Number}> | {r:number}=} boundaries - boundaries as polygon, or circle
-     * @param {number} [spacing = 0] - for tilesets.spacing > 0
-     * @returns {DrawImageObject}
-     */
-    image(x, y, width, height, key, imageIndex = 0, boundaries, spacing = 0) {
-        const image = this.#iLoader.getImage(key);
-
-        if (!image) {
-            (0,_Exception_js__WEBPACK_IMPORTED_MODULE_10__.Exception)(_constants_js__WEBPACK_IMPORTED_MODULE_11__.ERROR_CODES.CANT_GET_THE_IMAGE, "iLoader can't get the image with key: " + key);
-        }
-            
-        const renderObject = new _DrawImageObject_js__WEBPACK_IMPORTED_MODULE_3__.DrawImageObject(x, y, width, height, key, imageIndex, boundaries, image, spacing);
-        
-        this.#addObjectToPageData(renderObject);
-        return renderObject;
-    }
-
-    /**
-     * @param {Array<number>} vertices 
-     * @param {string} color - rgba(r,g,b,a)
-     * @returns {DrawLineObject}
-     */
-    line(vertices, color) {
-        const renderObject = new _DrawLineObject_js__WEBPACK_IMPORTED_MODULE_4__.DrawLineObject(vertices, color);
-        this.#addObjectToPageData(renderObject);
-        return renderObject;
-    }
-
-    /**
-     * @param {Array<{x:number, y:number}>} vertices - should go in anticlockwise order
-     * @param {string} bgColor - rgba(r,g,b,a)
-     * @returns {DrawPolygonObject}
-     */
-    polygon(vertices, bgColor) {
-        const renderObject = new _DrawPolygonObject_js__WEBPACK_IMPORTED_MODULE_5__.DrawPolygonObject(vertices, bgColor);
-        this.#addObjectToPageData(renderObject);
-        return renderObject;
-    }
-
-    /**
-     * 
-     * @param {string} layerKey 
-     * @param {string} tileMapKey 
-     * @param {boolean=} setBoundaries 
-     * @param {DrawShapeObject=} shapeMask 
-     * @returns {DrawTiledLayer}
-     */
-    tiledLayer(layerKey, tileMapKey, setBoundaries, shapeMask) {
-        const tilemap = this.#iLoader.getTileMap(tileMapKey),
-            tilesets = tilemap.tilesets,
-            tilesetImages = tilesets.map((tileset) => this.#iLoader.getImage(tileset.data.name)),
-            layerData = tilemap.layers.find((layer) => layer.name === layerKey),
-            renderObject = new _DrawTiledLayer_js__WEBPACK_IMPORTED_MODULE_7__.DrawTiledLayer(layerKey, tileMapKey, tilemap, tilesets, tilesetImages, layerData, setBoundaries, shapeMask);
-
-        this.#addObjectToPageData(renderObject);
-        return renderObject;
-    }
-
-    /**
-     * @ignore
-     * @param {string} methodKey 
-     * @param {Function} createObjectInstance
-     */
-    _registerNewObjectMethod = (methodKey, createObjectInstance) => {
-        this[methodKey] = (...args) => this.#createObjectAndAddToPageData(createObjectInstance, ...args);
-    };
-
-    /**
-     * @ignore
-     * @param {Function} createInstance
-     * @param {Array<any>} args
-     */
-    #createObjectAndAddToPageData = (createInstance, ...args) => {
-        const instance = createInstance(...args);
-        this.#addObjectToPageData(instance);
-        return instance;
-    };
-
-    /**
-     * @ignore
-     * @param {GameStageData} pageData;
-     */
-    _attachPageData = (pageData) => {
-        this.#currentPageData = pageData;
-    };
-    /**
-     * @ignore
-     */
-    _detachPageData = () => {
-        this.#currentPageData = null;
-    };
-}
-
-/***/ }),
-
-/***/ "./node_modules/jsge/src/base/DrawPolygonObject.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/jsge/src/base/DrawPolygonObject.js ***!
-  \*********************************************************/
+/***/ "./node_modules/jsge/src/base/2d/DrawPolygonObject.js":
+/*!************************************************************!*\
+  !*** ./node_modules/jsge/src/base/2d/DrawPolygonObject.js ***!
+  \************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   DrawPolygonObject: () => (/* binding */ DrawPolygonObject)
 /* harmony export */ });
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants.js */ "./node_modules/jsge/src/constants.js");
-/* harmony import */ var _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DrawShapeObject.js */ "./node_modules/jsge/src/base/DrawShapeObject.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../constants.js */ "./node_modules/jsge/src/constants.js");
+/* harmony import */ var _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DrawShapeObject.js */ "./node_modules/jsge/src/base/2d/DrawShapeObject.js");
 
 
 
@@ -914,18 +575,18 @@ class DrawPolygonObject extends _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_1__
 
 /***/ }),
 
-/***/ "./node_modules/jsge/src/base/DrawRectObject.js":
-/*!******************************************************!*\
-  !*** ./node_modules/jsge/src/base/DrawRectObject.js ***!
-  \******************************************************/
+/***/ "./node_modules/jsge/src/base/2d/DrawRectObject.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/jsge/src/base/2d/DrawRectObject.js ***!
+  \*********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   DrawRectObject: () => (/* binding */ DrawRectObject)
 /* harmony export */ });
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants.js */ "./node_modules/jsge/src/constants.js");
-/* harmony import */ var _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DrawShapeObject.js */ "./node_modules/jsge/src/base/DrawShapeObject.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../constants.js */ "./node_modules/jsge/src/constants.js");
+/* harmony import */ var _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DrawShapeObject.js */ "./node_modules/jsge/src/base/2d/DrawShapeObject.js");
 
 
 
@@ -988,18 +649,18 @@ class DrawRectObject extends _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_1__.Dr
 
 /***/ }),
 
-/***/ "./node_modules/jsge/src/base/DrawShapeObject.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/jsge/src/base/DrawShapeObject.js ***!
-  \*******************************************************/
+/***/ "./node_modules/jsge/src/base/2d/DrawShapeObject.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/jsge/src/base/2d/DrawShapeObject.js ***!
+  \**********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   DrawShapeObject: () => (/* binding */ DrawShapeObject)
 /* harmony export */ });
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants.js */ "./node_modules/jsge/src/constants.js");
-/* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../index.js */ "./node_modules/jsge/src/index.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../constants.js */ "./node_modules/jsge/src/constants.js");
+/* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../index.js */ "./node_modules/jsge/src/index.js");
 
 
 
@@ -1270,21 +931,21 @@ class DrawShapeObject {
 
 /***/ }),
 
-/***/ "./node_modules/jsge/src/base/DrawTextObject.js":
-/*!******************************************************!*\
-  !*** ./node_modules/jsge/src/base/DrawTextObject.js ***!
-  \******************************************************/
+/***/ "./node_modules/jsge/src/base/2d/DrawTextObject.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/jsge/src/base/2d/DrawTextObject.js ***!
+  \*********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   DrawTextObject: () => (/* binding */ DrawTextObject)
 /* harmony export */ });
-/* harmony import */ var _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DrawShapeObject.js */ "./node_modules/jsge/src/base/DrawShapeObject.js");
-/* harmony import */ var _Primitives_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Primitives.js */ "./node_modules/jsge/src/base/Primitives.js");
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../constants.js */ "./node_modules/jsge/src/constants.js");
-/* harmony import */ var _Exception_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Exception.js */ "./node_modules/jsge/src/base/Exception.js");
-/* harmony import */ var _WebGl_TextureStorage_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./WebGl/TextureStorage.js */ "./node_modules/jsge/src/base/WebGl/TextureStorage.js");
+/* harmony import */ var _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DrawShapeObject.js */ "./node_modules/jsge/src/base/2d/DrawShapeObject.js");
+/* harmony import */ var _Primitives_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Primitives.js */ "./node_modules/jsge/src/base/Primitives.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../constants.js */ "./node_modules/jsge/src/constants.js");
+/* harmony import */ var _Exception_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Exception.js */ "./node_modules/jsge/src/base/Exception.js");
+/* harmony import */ var _Temp_ImageTempStorage_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Temp/ImageTempStorage.js */ "./node_modules/jsge/src/base/Temp/ImageTempStorage.js");
 
 
 
@@ -1309,7 +970,7 @@ class DrawTextObject extends _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_0__.Dr
     #textureCanvas = document.createElement("canvas");
 
     /**
-     * @type {TextureStorage}
+     * @type {ImageTempStorage}
      */
     #textureStorage;
 
@@ -1511,19 +1172,21 @@ class DrawTextObject extends _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_0__.Dr
 
 /***/ }),
 
-/***/ "./node_modules/jsge/src/base/DrawTiledLayer.js":
-/*!******************************************************!*\
-  !*** ./node_modules/jsge/src/base/DrawTiledLayer.js ***!
-  \******************************************************/
+/***/ "./node_modules/jsge/src/base/2d/DrawTiledLayer.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/jsge/src/base/2d/DrawTiledLayer.js ***!
+  \*********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   DrawTiledLayer: () => (/* binding */ DrawTiledLayer)
 /* harmony export */ });
-/* harmony import */ var _AnimationEvent_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AnimationEvent.js */ "./node_modules/jsge/src/base/AnimationEvent.js");
-/* harmony import */ var _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DrawShapeObject.js */ "./node_modules/jsge/src/base/DrawShapeObject.js");
-/* harmony import */ var _WebGl_TextureStorage_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./WebGl/TextureStorage.js */ "./node_modules/jsge/src/base/WebGl/TextureStorage.js");
+/* harmony import */ var _AnimationEvent_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../AnimationEvent.js */ "./node_modules/jsge/src/base/AnimationEvent.js");
+/* harmony import */ var _DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DrawShapeObject.js */ "./node_modules/jsge/src/base/2d/DrawShapeObject.js");
+/* harmony import */ var _Temp_ImageTempStorage_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Temp/ImageTempStorage.js */ "./node_modules/jsge/src/base/Temp/ImageTempStorage.js");
+/* harmony import */ var _Temp_TiledLayerTempStorage_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Temp/TiledLayerTempStorage.js */ "./node_modules/jsge/src/base/Temp/TiledLayerTempStorage.js");
+
 
 
 
@@ -1542,7 +1205,7 @@ class DrawTiledLayer {
     #DELIMITER = "-#-";
     #tilesetImages;
     /**
-     * @type {Array<TextureStorage>}
+     * @type {Array<ImageTempStorage>}
      */
     #textureStorages;
     #layerData;
@@ -1570,12 +1233,13 @@ class DrawTiledLayer {
         this.#textureStorages = [];
         this.#tilesetImages = tilesetImages;
         this.#layerData = layerData;
+        
         this.#setBoundaries = setBoundaries;
         this.#drawBoundaries = setBoundaries ? setBoundaries : false;
         if (shapeMask) {
             this.setMask(shapeMask);
         }
-        this.#processTilesets(tilesets);
+        this.#processData(tilesets, layerData);
     }
 
     /**
@@ -1700,10 +1364,19 @@ class DrawTiledLayer {
      * _boundaries - Map<id:objectgroup>
      * @param {*} tilesets
      */
-    #processTilesets(tilesets) {
-        for (let tileset of tilesets) {
+    #processData(tilesets, layerData) {
+        // границы для слоя создаются одни, даже если они высчитываются с разных тайлсетов
+        // поэтому суммируем и находим максимальное их количество
+        let ellipseBLen = 0,
+            pointBLen = 0,
+            polygonBLen = 0;
+        tilesets.forEach((tileset, idx) => {
             const tiles = tileset.data.tiles,
-                name = tileset.data.name;
+                name = tileset.data.name,
+                firstgid = tileset.firstgid,
+                nextTileset = this.tilesets[idx + 1],
+                nextgid = nextTileset ? nextTileset.firstgid : 1_000_000_000;
+                
             if (tiles) {
                 for (let tile of tiles) {
                     const animation = tile.animation,
@@ -1724,7 +1397,7 @@ class DrawTiledLayer {
                         }
                         this.#activateAnimation(animationEvent);
                     }
-                    if (objectgroup) {
+                    if (objectgroup && this.#setBoundaries) {
                         if (tileset.data._hasBoundaries) {
                             tileset.data._boundaries.set(id, objectgroup);
                         } else {
@@ -1733,11 +1406,40 @@ class DrawTiledLayer {
                             tileset.data._boundaries = new Map();
                             tileset.data._boundaries.set(id, objectgroup);
                         }
-                        
+                        objectgroup.objects.forEach((object) => {
+                            if (object.ellipse) {
+                                const cellsWithB = layerData.data.filter((tile) => tile === id + firstgid).length;
+                                ellipseBLen += (4 * cellsWithB); // (x, y, wRad, hRad) * layer items
+                            } else if (object.point) {
+                                const cellsWithB = layerData.data.filter((tile) => tile === id + firstgid).length;
+                                pointBLen += (2 * cellsWithB); // (x, y) * layer items
+                            } else if (object.polygon) {
+                                const cellsWithB = layerData.data.filter((tile) => tile === id + firstgid).length;
+                                polygonBLen += (object.polygon.length * 2 * cellsWithB); // (each point * 2(x,y) ) * layer items
+                            } else { // rect object
+                                const cellsWithB = layerData.data.filter((tile) => tile === id + firstgid).length;
+                                polygonBLen += (16 * cellsWithB); // (4 faces * 4 cords for each one) * layer items
+                            }
+                        });
                     }
                 }
             }
-        }
+            
+            const nonEmptyCells = layerData.data.filter((tile) => ((tile >= firstgid) && (tile < nextgid))).length,
+                cells = layerData.data.length;
+
+            if (this.#setBoundaries) {
+                polygonBLen+=(nonEmptyCells * 16); // potential boundaries also nonEmptyCells
+            }
+            // создаем вспомогательный объект для расчетов и хранения данных отрисовки
+            // help class for draw calculations
+            tileset._temp = new _Temp_TiledLayerTempStorage_js__WEBPACK_IMPORTED_MODULE_3__.TiledLayerTempStorage(cells, nonEmptyCells);
+        });
+        
+        // save boundaries max possible lengths
+        layerData.ellipseBoundariesLen = ellipseBLen;
+        layerData.pointBoundariesLen = pointBLen;
+        layerData.polygonBoundariesLen = polygonBLen;
     }
 
     /**
@@ -1799,6 +1501,345 @@ class DrawTiledLayer {
     }
 }
 
+
+/***/ }),
+
+/***/ "./node_modules/jsge/src/base/AnimationEvent.js":
+/*!******************************************************!*\
+  !*** ./node_modules/jsge/src/base/AnimationEvent.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AnimationEvent: () => (/* binding */ AnimationEvent)
+/* harmony export */ });
+class AnimationEvent {
+    #eventName;
+    /**
+     * @type {number}
+     */
+    #defaultDurationTime = 100;
+    /**
+     * Array [sprite index, duration]
+     * @type { Array<Array<number, number>> }
+     */
+    #animationSpriteIndexes;
+    /**
+     * 
+     * @type {number}
+     */
+    #currentAnimationItemIndex;
+    /**
+     * @type {boolean}
+     */
+    #isActive;
+    /**
+     * @type {boolean}
+     */
+    #isRepeated;
+    #lastAnimationTimeStamp;
+    
+    constructor(eventName, animationSpriteIndexes, isRepeated = false, currentSpriteIndex, isActive = false) {
+        this.#eventName = eventName;
+        this.#animationSpriteIndexes = this.#convertToArray(animationSpriteIndexes);
+        this.#currentAnimationItemIndex = currentSpriteIndex ? currentSpriteIndex : 0;
+        this.#isActive = isActive;
+        this.#isRepeated = isRepeated;
+    }
+
+    get name() {
+        return this.#eventName;
+    }
+
+    get isActive() {
+        return this.#isActive;
+    }
+
+    get currentSprite() {
+        return this.#animationSpriteIndexes[this.#currentAnimationItemIndex][0];
+    }
+
+    get _isLastSprite() {
+        return (this.#animationSpriteIndexes.length - 1) === this.#currentAnimationItemIndex;
+    }
+
+    iterateAnimationIndex() {
+        const currentIndex = this.#currentAnimationItemIndex,
+            currentDuration = this.#animationSpriteIndexes[currentIndex][1],
+            lastIterationTime = Date.now() - this.#lastAnimationTimeStamp;
+        // iterate or skip
+        if (currentDuration < lastIterationTime) {
+            if (!this._isLastSprite) {
+                this.#currentAnimationItemIndex++;
+            } else {
+                if (!this.#isRepeated) {
+                    this.deactivateAnimation();
+                } else {
+                    // take first element
+                    this.#currentAnimationItemIndex = 0;
+                    
+                }
+            }
+            // reset timestamp
+            this.#lastAnimationTimeStamp = Date.now();
+        }
+    }
+
+    activateAnimation = () => {
+        this.#isActive = true;
+        this.#currentAnimationItemIndex = 0;
+        this.#lastAnimationTimeStamp = Date.now();
+    };
+
+    deactivateAnimation = () => {
+        this.#isActive = false;
+    };
+
+    #convertToArray(animationSpriteIndexes) {
+        let animationArray = [];
+        animationSpriteIndexes.forEach(element => {
+            if (typeof element.id === "number" && typeof element.duration === "number") {
+                animationArray.push([element.id, element.duration]);
+            } else {
+                animationArray.push([element, this.#defaultDurationTime]);
+            }
+            
+        });
+        return animationArray;
+    }
+}
+
+/***/ }),
+
+/***/ "./node_modules/jsge/src/base/DrawObjectFactory.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/jsge/src/base/DrawObjectFactory.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DrawObjectFactory: () => (/* binding */ DrawObjectFactory)
+/* harmony export */ });
+/* harmony import */ var _2d_DrawRectObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./2d/DrawRectObject.js */ "./node_modules/jsge/src/base/2d/DrawRectObject.js");
+/* harmony import */ var _2d_DrawTextObject_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./2d/DrawTextObject.js */ "./node_modules/jsge/src/base/2d/DrawTextObject.js");
+/* harmony import */ var _2d_DrawConusObject_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./2d/DrawConusObject.js */ "./node_modules/jsge/src/base/2d/DrawConusObject.js");
+/* harmony import */ var _2d_DrawImageObject_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./2d/DrawImageObject.js */ "./node_modules/jsge/src/base/2d/DrawImageObject.js");
+/* harmony import */ var _2d_DrawLineObject_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./2d/DrawLineObject.js */ "./node_modules/jsge/src/base/2d/DrawLineObject.js");
+/* harmony import */ var _2d_DrawPolygonObject_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./2d/DrawPolygonObject.js */ "./node_modules/jsge/src/base/2d/DrawPolygonObject.js");
+/* harmony import */ var _2d_DrawCircleObject_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./2d/DrawCircleObject.js */ "./node_modules/jsge/src/base/2d/DrawCircleObject.js");
+/* harmony import */ var _2d_DrawTiledLayer_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./2d/DrawTiledLayer.js */ "./node_modules/jsge/src/base/2d/DrawTiledLayer.js");
+/* harmony import */ var _2d_DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./2d/DrawShapeObject.js */ "./node_modules/jsge/src/base/2d/DrawShapeObject.js");
+/* harmony import */ var _GameStageData_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./GameStageData.js */ "./node_modules/jsge/src/base/GameStageData.js");
+/* harmony import */ var _Exception_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Exception.js */ "./node_modules/jsge/src/base/Exception.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../constants.js */ "./node_modules/jsge/src/constants.js");
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Creates drawObjects instances.<br>
+ * accessible via GameStage.draw <br>
+ * Attach images for image objects and tilemaps <br>
+ * Adds drawObjects to current GameStage.stageData
+ * @see {@link GameStage} a part of GameStage
+ */
+class DrawObjectFactory {
+    /**
+     * @type {AssetsManager}
+     */
+    #iLoader;
+    /**
+     * @type {GameStageData | null}
+     */
+    #currentPageData;
+    /**
+     * @hideconstructor 
+     */
+    constructor(iLoader) {
+        this.#iLoader = iLoader;
+    }
+
+    /**
+     * @returns {GameStageData}
+     */
+    get stageData() {
+        return this.#currentPageData;
+    }
+
+    /**
+     * 
+     * @param {*} renderObject 
+     * @returns {Object}
+     */
+    #addObjectToPageData(renderObject) {
+        this.#currentPageData._renderObject = renderObject;
+        this.#currentPageData._sortRenderObjectsBySortIndex();
+        return renderObject;
+    }
+    /**
+     * @param {number} x 
+     * @param {number} y 
+     * @param {number} width 
+     * @param {number} height 
+     * @param {string} backgroundColor - rgba(r,g,b,a)
+     * @returns {DrawRectObject}
+     */
+    rect(x, y, width, height, backgroundColor) {
+        const renderObject = new _2d_DrawRectObject_js__WEBPACK_IMPORTED_MODULE_0__.DrawRectObject(x, y, width, height, backgroundColor);
+        this.#addObjectToPageData(renderObject);
+        return renderObject; 
+    }
+
+    /**
+     * @param {number} x 
+     * @param {number} y 
+     * @param {string} text 
+     * @param {string} font - size fontFamily
+     * @param {string} color - rgba(r,g,b,a)
+     * @returns {DrawTextObject}
+     */
+    text(x, y, text, font, color) {
+        const renderObject = new _2d_DrawTextObject_js__WEBPACK_IMPORTED_MODULE_1__.DrawTextObject(x, y, text, font, color);
+        this.#addObjectToPageData(renderObject);
+        return renderObject;
+    }
+
+    /**
+     * 
+     * @param {number} radius 
+     * @param {string} bgColor - rgba(r,g,b,a)
+     * @param {number=} angle
+     * @param {number=} [fade=0] (0 - 1)
+     * @returns {DrawConusObject}
+     */
+    conus(x, y, radius, bgColor, angle, fade = 0) {
+        const renderObject = new _2d_DrawConusObject_js__WEBPACK_IMPORTED_MODULE_2__.DrawConusObject(x, y, radius, bgColor, angle, fade);
+        this.#addObjectToPageData(renderObject);
+        return renderObject;
+    }
+
+    /**
+     * 
+     * @param {number} radius 
+     * @param {string} bgColor - rgba(r,g,b,a)
+     * @returns {DrawCircleObject}
+     */
+    circle(x, y, radius, bgColor) {
+        const renderObject = new _2d_DrawCircleObject_js__WEBPACK_IMPORTED_MODULE_6__.DrawCircleObject(x, y, radius, bgColor);
+        this.#addObjectToPageData(renderObject);
+        return renderObject;
+    }
+
+    /**
+     * @param {number} x 
+     * @param {number} y 
+     * @param {number} width 
+     * @param {number} height 
+     * @param {string} key 
+     * @param {number} [imageIndex = 0]
+     * @param {Array<{x:Number, y:Number}> | {r:number}=} boundaries - boundaries as polygon, or circle
+     * @param {number} [spacing = 0] - for tilesets.spacing > 0
+     * @returns {DrawImageObject}
+     */
+    image(x, y, width, height, key, imageIndex = 0, boundaries, spacing = 0) {
+        const image = this.#iLoader.getImage(key);
+
+        if (!image) {
+            (0,_Exception_js__WEBPACK_IMPORTED_MODULE_10__.Exception)(_constants_js__WEBPACK_IMPORTED_MODULE_11__.ERROR_CODES.CANT_GET_THE_IMAGE, "iLoader can't get the image with key: " + key);
+        }
+            
+        const renderObject = new _2d_DrawImageObject_js__WEBPACK_IMPORTED_MODULE_3__.DrawImageObject(x, y, width, height, key, imageIndex, boundaries, image, spacing);
+        
+        this.#addObjectToPageData(renderObject);
+        return renderObject;
+    }
+
+    /**
+     * @param {Array<number>} vertices 
+     * @param {string} color - rgba(r,g,b,a)
+     * @returns {DrawLineObject}
+     */
+    line(vertices, color) {
+        const renderObject = new _2d_DrawLineObject_js__WEBPACK_IMPORTED_MODULE_4__.DrawLineObject(vertices, color);
+        this.#addObjectToPageData(renderObject);
+        return renderObject;
+    }
+
+    /**
+     * @param {Array<{x:number, y:number}>} vertices - should go in anticlockwise order
+     * @param {string} bgColor - rgba(r,g,b,a)
+     * @returns {DrawPolygonObject}
+     */
+    polygon(vertices, bgColor) {
+        const renderObject = new _2d_DrawPolygonObject_js__WEBPACK_IMPORTED_MODULE_5__.DrawPolygonObject(vertices, bgColor);
+        this.#addObjectToPageData(renderObject);
+        return renderObject;
+    }
+
+    /**
+     * 
+     * @param {string} layerKey 
+     * @param {string} tileMapKey 
+     * @param {boolean=} setBoundaries 
+     * @param {DrawShapeObject=} shapeMask 
+     * @returns {DrawTiledLayer}
+     */
+    tiledLayer(layerKey, tileMapKey, setBoundaries, shapeMask) {
+        const tilemap = this.#iLoader.getTileMap(tileMapKey),
+            tilesets = tilemap.tilesets.map((tileset) => Object.assign({}, tileset)), // copy to avoid change same tilemap instance in different tiledLayers
+            tilesetImages = tilesets.map((tileset) => this.#iLoader.getImage(tileset.data.name)),
+            layerData = Object.assign({}, tilemap.layers.find((layer) => layer.name === layerKey)), // copy to avoid change same tilemap instance in different tiledLayers
+            renderObject = new _2d_DrawTiledLayer_js__WEBPACK_IMPORTED_MODULE_7__.DrawTiledLayer(layerKey, tileMapKey, tilemap, tilesets, tilesetImages, layerData, setBoundaries, shapeMask);
+
+        this.#addObjectToPageData(renderObject);
+        return renderObject;
+    }
+
+    /**
+     * @ignore
+     * @param {string} methodKey 
+     * @param {Function} createObjectInstance
+     */
+    _registerNewObjectMethod = (methodKey, createObjectInstance) => {
+        this[methodKey] = (...args) => this.#createObjectAndAddToPageData(createObjectInstance, ...args);
+    };
+
+    /**
+     * @ignore
+     * @param {Function} createInstance
+     * @param {Array<any>} args
+     */
+    #createObjectAndAddToPageData = (createInstance, ...args) => {
+        const instance = createInstance(...args);
+        this.#addObjectToPageData(instance);
+        return instance;
+    };
+
+    /**
+     * @ignore
+     * @param {GameStageData} pageData;
+     */
+    _attachPageData = (pageData) => {
+        this.#currentPageData = pageData;
+    };
+    /**
+     * @ignore
+     */
+    _detachPageData = () => {
+        this.#currentPageData = null;
+    };
+}
 
 /***/ }),
 
@@ -1874,13 +1915,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Exception_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Exception.js */ "./node_modules/jsge/src/base/Exception.js");
 /* harmony import */ var _modules_assetsm_dist_assetsm_min_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../modules/assetsm/dist/assetsm.min.js */ "./node_modules/jsge/modules/assetsm/dist/assetsm.min.js");
 /* harmony import */ var _DrawObjectFactory_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./DrawObjectFactory.js */ "./node_modules/jsge/src/base/DrawObjectFactory.js");
-/* harmony import */ var _DrawCircleObject_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./DrawCircleObject.js */ "./node_modules/jsge/src/base/DrawCircleObject.js");
-/* harmony import */ var _DrawConusObject_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./DrawConusObject.js */ "./node_modules/jsge/src/base/DrawConusObject.js");
-/* harmony import */ var _DrawImageObject_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./DrawImageObject.js */ "./node_modules/jsge/src/base/DrawImageObject.js");
-/* harmony import */ var _DrawLineObject_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./DrawLineObject.js */ "./node_modules/jsge/src/base/DrawLineObject.js");
-/* harmony import */ var _DrawPolygonObject_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./DrawPolygonObject.js */ "./node_modules/jsge/src/base/DrawPolygonObject.js");
-/* harmony import */ var _DrawRectObject_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./DrawRectObject.js */ "./node_modules/jsge/src/base/DrawRectObject.js");
-/* harmony import */ var _DrawTextObject_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./DrawTextObject.js */ "./node_modules/jsge/src/base/DrawTextObject.js");
+/* harmony import */ var _2d_DrawCircleObject_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./2d/DrawCircleObject.js */ "./node_modules/jsge/src/base/2d/DrawCircleObject.js");
+/* harmony import */ var _2d_DrawConusObject_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./2d/DrawConusObject.js */ "./node_modules/jsge/src/base/2d/DrawConusObject.js");
+/* harmony import */ var _2d_DrawImageObject_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./2d/DrawImageObject.js */ "./node_modules/jsge/src/base/2d/DrawImageObject.js");
+/* harmony import */ var _2d_DrawLineObject_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./2d/DrawLineObject.js */ "./node_modules/jsge/src/base/2d/DrawLineObject.js");
+/* harmony import */ var _2d_DrawPolygonObject_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./2d/DrawPolygonObject.js */ "./node_modules/jsge/src/base/2d/DrawPolygonObject.js");
+/* harmony import */ var _2d_DrawRectObject_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./2d/DrawRectObject.js */ "./node_modules/jsge/src/base/2d/DrawRectObject.js");
+/* harmony import */ var _2d_DrawTextObject_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./2d/DrawTextObject.js */ "./node_modules/jsge/src/base/2d/DrawTextObject.js");
 /* harmony import */ var _ISystem_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./ISystem.js */ "./node_modules/jsge/src/base/ISystem.js");
 /* harmony import */ var _ISystemAudio_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./ISystemAudio.js */ "./node_modules/jsge/src/base/ISystemAudio.js");
 /* harmony import */ var _configs_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../configs.js */ "./node_modules/jsge/src/configs.js");
@@ -1936,7 +1977,7 @@ class GameStage {
 
     constructor() {
         this.#isActive = false;
-        this.#stageData = new _GameStageData_js__WEBPACK_IMPORTED_MODULE_1__.GameStageData();
+        
     }
 
     /**
@@ -1948,6 +1989,7 @@ class GameStage {
     _register(name, system) {
         this.#name = name;
         this.#iSystemReference = system;
+        this.#stageData = new _GameStageData_js__WEBPACK_IMPORTED_MODULE_1__.GameStageData(this.#iSystemReference.systemSettings.gameOptions);
         this.#setWorldDimensions();
         this.#setCanvasSize();
         this.register();
@@ -2410,35 +2452,38 @@ class GameStage {
      * @returns {{x:number, y:number, p:number} | boolean}
      */
     #isCircleToBoundariesCollision(x, y, r) {
-        const mapObjects = this.stageData.getBoundaries(),
+        const mapObjects = this.stageData.getRawBoundaries(),
             ellipseB = this.stageData.getEllipseBoundaries(),
             pointB = this.stageData.getPointBoundaries(),
             [mapOffsetX, mapOffsetY] = this.stageData.worldOffset,
             xWithOffset = x - mapOffsetX,
             yWithOffset = y - mapOffsetY,
-            len = mapObjects.length,
-            eLen = ellipseB.length,
-            pLen = pointB.length;
+            len = this.stageData.boundariesLen,
+            eLen = this.stageData.ellipseBLen,
+            pLen = this.stageData.pointBLen;
 
-        for (let i = 0; i < len; i+=1) {
-            const item = mapObjects[i];
-            const object = {
-                    x1: item[0],
-                    y1: item[1],
-                    x2: item[2],
-                    y2: item[3]
-                },
-                intersect = (0,_utils_js__WEBPACK_IMPORTED_MODULE_15__.isCircleLineIntersect)(xWithOffset, yWithOffset, r, object);
-            if (intersect) {
-                //console.log("rotation: ", rotation);
-                //console.log("polygon: ", polygonWithOffsetAndRotation);
-                //console.log("intersect: ", intersect);
-                return intersect;
+        for (let i = 0; i < len; i+=4) {
+            const x1 = mapObjects[i],
+                y1 = mapObjects[i + 1],
+                x2 = mapObjects[i + 2],
+                y2 = mapObjects[i + 3];
+
+            if (x1 === 0 && y1 === 0 && x2 === 0 && y2 === 0) {
+                continue;
+            } else {
+                const intersect = (0,_utils_js__WEBPACK_IMPORTED_MODULE_15__.isCircleLineIntersect)(xWithOffset, yWithOffset, r, {x1, y1, x2, y2});
+                
+                if (intersect) {
+                    //console.log("rotation: ", rotation);
+                    //console.log("polygon: ", polygonWithOffsetAndRotation);
+                    //console.log("intersect: ", intersect);
+                    return intersect;
+                }
             }
         }
         if (eLen > 0) {
-            for (let i = 0; i < eLen; i+=1) {
-                const ellipse = ellipseB[i],
+            for (let i = 0; i < eLen; i+=4) {
+                const ellipse = [ellipseB[i], ellipseB[i+1], ellipseB[i+2], ellipseB[i+3]],
                     intersect = (0,_utils_js__WEBPACK_IMPORTED_MODULE_15__.isEllipseCircleIntersect)(ellipse, {x:xWithOffset, y:yWithOffset, r});
                 if (intersect) {
                     //console.log("rotation: ", rotation);
@@ -2450,10 +2495,9 @@ class GameStage {
         }
         
         if (pLen > 0) {
-            for (let i = 0; i < pLen; i+=1) {
-                const point = pointB[i],
-                    xP = point[0],
-                    yP = point[1],
+            for (let i = 0; i < pLen; i+=2) {
+                const xP = pointB[i],
+                    yP = pointB[i + 1],
                     intersect = (0,_utils_js__WEBPACK_IMPORTED_MODULE_15__.isPointCircleIntersect)(xP, yP, {x:xWithOffset, y:yWithOffset, r});
                 if (intersect) {
                     //console.log("rotation: ", rotation);
@@ -2470,40 +2514,42 @@ class GameStage {
      * @param {number} x
      * @param {number} y
      * @param {Array<Array<number>>} polygon
-     * @param {number} rotation 
+     * @param {number} rotation
      * @returns {{x:number, y:number, p:number} | boolean}
      */
     #isPolygonToBoundariesCollision(x, y, polygon, rotation) {
-        const mapObjects = this.stageData.getBoundaries(),
+        const mapObjects = this.stageData.getRawBoundaries(),
             ellipseB = this.stageData.getEllipseBoundaries(),
             pointB = this.stageData.getPointBoundaries(),
             [mapOffsetX, mapOffsetY] = this.stageData.worldOffset,
             xWithOffset = x - mapOffsetX,
             yWithOffset = y - mapOffsetY,
             polygonWithOffsetAndRotation = polygon.map((vertex) => (this.#calculateShiftedVertexPos(vertex, xWithOffset, yWithOffset, rotation))),
-            len = mapObjects.length,
-            eLen = ellipseB.length,
-            pLen = pointB.length;
+            len = this.stageData.boundariesLen,
+            eLen = this.stageData.ellipseBLen,
+            pLen = this.stageData.pointBLen;
 
-        for (let i = 0; i < len; i+=1) {
-            const item = mapObjects[i];
-            const object = {
-                    x1: item[0],
-                    y1: item[1],
-                    x2: item[2],
-                    y2: item[3]
-                },
-                intersect = (0,_utils_js__WEBPACK_IMPORTED_MODULE_15__.isPolygonLineIntersect)(polygonWithOffsetAndRotation, object);
-            if (intersect) {
-                //console.log("rotation: ", rotation);
-                //console.log("polygon: ", polygonWithOffsetAndRotation);
-                //console.log("intersect: ", intersect);
-                return intersect;
+        for (let i = 0; i < len; i+=4) {
+            const x1 = mapObjects[i],
+                y1 = mapObjects[i + 1],
+                x2 = mapObjects[i + 2],
+                y2 = mapObjects[i + 3];
+
+            if (x1 === 0 && y1 === 0 && x2 === 0 && y2 === 0) {
+                continue;
+            } else {
+                const intersect = (0,_utils_js__WEBPACK_IMPORTED_MODULE_15__.isPolygonLineIntersect)(polygonWithOffsetAndRotation, {x1, y1, x2, y2});
+                if (intersect) {
+                    //console.log("rotation: ", rotation);
+                    //console.log("polygon: ", polygonWithOffsetAndRotation);
+                    //console.log("intersect: ", intersect);
+                    return intersect;
+                }
             }
         }
         if (eLen > 0) {
-            for (let i = 0; i < eLen; i+=1) {
-                const ellipse = ellipseB[i],
+            for (let i = 0; i < eLen; i+=4) {
+                const ellipse = [ellipseB[i], ellipseB[i+1], ellipseB[i+2], ellipseB[i+3]],
                     intersect = (0,_utils_js__WEBPACK_IMPORTED_MODULE_15__.isEllipsePolygonIntersect)(ellipse, polygonWithOffsetAndRotation);
                 if (intersect) {
                     //console.log("rotation: ", rotation);
@@ -2515,10 +2561,9 @@ class GameStage {
         }
         
         if (pLen > 0) {
-            for (let i = 0; i < pLen; i+=1) {
-                const point = pointB[i],
-                    x = point[0],
-                    y = point[1],
+            for (let i = 0; i < pLen; i+=2) {
+                const x = pointB[i],
+                    y = pointB[i+1],
                     intersect = (0,_utils_js__WEBPACK_IMPORTED_MODULE_15__.isPointPolygonIntersect)(x, y, polygonWithOffsetAndRotation);
                 if (intersect) {
                 //console.log("rotation: ", rotation);
@@ -2571,26 +2616,51 @@ class GameStageData {
     #centerX = 0;
     #centerY = 0;
     #rotate = 0;
+
+    #maxBoundariesSize = 0;
+    #maxEllipseBoundSize = 0;
+    #maxPointBSize = 0;
+    /**
+     * Points to next empty cell
+     * @type {number}
+     */
+    #bPointer = 0;
+    /**
+     * Points to next empty cell
+     * @type {number}
+     */
+    #pPointer = 0;
+    /**
+     * Points to next empty cell
+     * @type {number}
+     */
+    #ePointer = 0;
     /**
      * current screen boundaries, recalculated every render cycles
-     * @type {Array<Array<number>>}
+     * stored as floatArray, 
+     * each 4 cells, represent a line with coords x1,y1,x2,y2
+     * @type {Float32Array}
      */
-    #boundaries = [];
+    #boundaries;
     /**
      * ellipse boundaries
-     * @type {Array<Array<number>>}
+     * stored as floatArray, 
+     * each 4 cells, represent am ellipse with cords centerX, centerY, radiusX, radiusY
+     * @type {Float32Array}
      */
-    #ellipseBoundaries = [];
+    #ellipseBoundaries;
     /**
      * point boundaries
-     * @type {Array<Array<number>>}
+     * stored as floatArray, 
+     * each 2 cells, represent a point with coords x1,y1
+     * @type {Float32Array}
      */
-    #pointBoundaries = [];
+    #pointBoundaries;
     /**
      * whole world boundaries, calculated once on prepare stage
      * @type {Array<Array<number>>}
      */
-    #wholeWorldBoundaries = [];
+    #wholeWorldBoundaries;
     /**
      * @type {Array<DrawImageObject | DrawCircleObject | DrawConusObject | DrawLineObject | DrawPolygonObject | DrawRectObject | DrawTextObject | DrawTiledLayer>}
      */
@@ -2605,6 +2675,12 @@ class GameStageData {
      * @type {boolean}
      */
     #isWorldBoundariesEnabled = false;
+
+    constructor(gameOptions) {
+        //this.#boundaries = new Float32Array(this.#maxBoundariesSize);
+        //this.#ellipseBoundaries = new Float32Array(this.#maxBoundariesSize);
+        //this.#pointBoundaries = new Float32Array(this.#maxBoundariesSize);
+    }
 
     /**
      * 
@@ -2622,7 +2698,7 @@ class GameStageData {
      * @param {{x1:number,y1:number,x2:number, y2:number}} boundaries 
      */
     #addBoundaries(boundaries) {
-        this.#boundaries.push([boundaries.x1, boundaries.y1, boundaries.x2, boundaries.y2]);
+        this._addBoundaryLine(boundaries.x1,boundaries.y1, boundaries.x2, boundaries.y2);
     }
 
     /**
@@ -2631,15 +2707,47 @@ class GameStageData {
      * @ignore
      */
     _addBoundariesArray(boundaries) {
-        this.#boundaries.push(...boundaries);
+        const len = boundaries.length;
+        for (let i = 0; i < len; i++) {
+            const boundary = boundaries[i];
+            this._addBoundaryLine(boundary[0], boundary[1], boundary[2], boundary[3]);
+        }
     }
 
-    _addEllipseBoundaries(boundaries) {
-        this.#ellipseBoundaries.push(...boundaries);
+    _addBoundaryLine(x1, y1, x2, y2) {
+        this.#boundaries[this.#bPointer] = x1;
+        this.#bPointer++;
+        this.#boundaries[this.#bPointer] = y1;
+        this.#bPointer++;
+        this.#boundaries[this.#bPointer] = x2;
+        this.#bPointer++;
+        this.#boundaries[this.#bPointer] = y2;
+        this.#bPointer++;
     }
 
-    _addPointBoundaries(boundaries) {
-        this.#pointBoundaries.push(...boundaries);
+    _addEllipseBoundary(w, h, x, y) {
+        this.#ellipseBoundaries[this.#ePointer] = w;
+        this.#ePointer++;
+        this.#ellipseBoundaries[this.#ePointer] = h;
+        this.#ePointer++;
+        this.#ellipseBoundaries[this.#ePointer] = x;
+        this.#ePointer++;
+        this.#ellipseBoundaries[this.#ePointer] = y;
+        this.#ePointer++;
+    }
+
+    _addPointBoundary(x,y) {
+        this.#pointBoundaries[this.#pPointer] = x;
+        this.#pPointer++;
+        this.#pointBoundaries[this.#pPointer] = y;
+        this.#pPointer++;
+    }
+
+    _removeBoundaryLine(startPos) {
+        this.#boundaries[startPos] = 0;
+        this.#boundaries[startPos + 1] = 0;
+        this.#boundaries[startPos + 2] = 0;
+        this.#boundaries[startPos + 3] = 0;
     }
 
     /**
@@ -2647,9 +2755,33 @@ class GameStageData {
      * @ignore
      */
     _clearBoundaries() {
-        this.#boundaries = [];
-        this.#ellipseBoundaries = [];
-        this.#pointBoundaries = [];
+        this.#boundaries.fill(0);
+        this.#ellipseBoundaries.fill(0);
+        this.#pointBoundaries.fill(0);
+        
+        this.#bPointer = 0;
+        this.#ePointer = 0;
+        this.#pPointer = 0;
+    }
+
+    _initiateBoundariesData() {
+        this.#boundaries = new Float32Array(this.#maxBoundariesSize);
+        this.#ellipseBoundaries = new Float32Array(this.#maxEllipseBoundSize);
+        this.#pointBoundaries = new Float32Array(this.#maxPointBSize);
+    }
+
+    /**
+     * 
+     * @param {number} bSize
+     * @param {number} polSize - polygon boundaries size
+     * @param {number} eSize - ellipse boundaries size
+     * @param {number} pSize - points boundaries size
+     * @ignore
+     */
+    _setMaxBoundariesSize(bSize, eSize = 0, pSize = 0) {
+        this.#maxBoundariesSize = bSize;
+        this.#maxEllipseBoundSize = eSize;
+        this.#maxPointBSize = pSize;
     }
 
     /**
@@ -2708,11 +2840,14 @@ class GameStageData {
 
     /**
      * Merge same boundaries
+     * !not used
      * @ignore
+     * @deprecated
      */
     _mergeBoundaries(isWholeMapBoundaries = false) {
         const boundaries = isWholeMapBoundaries ? this.getWholeWorldBoundaries() : this.getBoundaries(),
             boundariesSet = new Set(boundaries);
+
         for (const line of boundariesSet.values()) {
             const lineX1 = line[0],
                 lineY1 = line[1],
@@ -2737,7 +2872,6 @@ class GameStageData {
                 }
             }
         }
-
         if (isWholeMapBoundaries) {
             this.#boundaries = Array.from(boundariesSet);
         } else {
@@ -2767,12 +2901,34 @@ class GameStageData {
      * @returns {Array<Array<number>>}
      */
     getBoundaries() {
+        const boundaries = this.#boundaries, 
+            len = this.#bPointer;
+
+        let bTempArray = [],
+            bArray = [];
+        
+        for (let i = 0; i < len; i++) {
+            const element = boundaries[i];
+            bTempArray.push(element);
+            if (((i + 1) % 4) === 0) {
+                bArray.push(bTempArray);
+                bTempArray = [];
+            }
+        }
+        return bArray;
+    }
+
+    /**
+     * 
+     * @returns {Float32Array}
+     */
+    getRawBoundaries() {
         return this.#boundaries;
     }
 
     /**
      * 
-     * @returns {Array<Array<number>>}
+     * @returns {Float32Array}
      */
     getEllipseBoundaries() {
         return this.#ellipseBoundaries;
@@ -2780,7 +2936,7 @@ class GameStageData {
 
     /**
      * 
-     * @returns {Array<Array<number>>}
+     * @returns {Float32Array}
      */
     getPointBoundaries() {
         return this.#pointBoundaries;
@@ -2829,6 +2985,27 @@ class GameStageData {
      */
     get mapRotate() {
         return this.#rotate;
+    }
+
+    /**
+     * @type {number}
+     */
+    get boundariesLen() {
+        return this.#bPointer;
+    }
+
+    /**
+     * @type {number}
+     */
+    get ellipseBLen() {
+        return this.#ePointer;
+    }
+
+    /**
+     * @type {number}
+     */
+    get pointBLen() {
+        return this.#pPointer;
     }
 
     /**
@@ -3013,7 +3190,7 @@ class IExtension {
      * Register render method for class.
      * @param {string} objectClassName - object name registered to DrawObjectFactory
      * @param {function(renderObject, gl, pageData, program, vars):Promise<any[]>} objectRenderMethod - should be promise based returns vertices number and draw program
-     * @param {string=} objectWebGlDrawProgram - a webgl program name previously registered with iExtension.registerAndCompileWebGlProgram()
+     * @param {string} objectWebGlDrawProgram - a webgl program name previously registered with iExtension.registerAndCompileWebGlProgram()
      */
     registerObjectRender(objectClassName, objectRenderMethod, objectWebGlDrawProgram) {
         this.#systemReference.iRender._registerObjectRender(objectClassName, objectRenderMethod, objectWebGlDrawProgram);
@@ -3043,6 +3220,9 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * Represents Socket connection
+ * 
+ * From 1.4.4 disabled by default,
+ * to enable, set settings.network.enabled to true
  */
 class INetwork extends EventTarget {
     #systemSettings;
@@ -3183,20 +3363,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   IRender: () => (/* binding */ IRender)
 /* harmony export */ });
-/* harmony import */ var _DrawTiledLayer_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DrawTiledLayer.js */ "./node_modules/jsge/src/base/DrawTiledLayer.js");
+/* harmony import */ var _2d_DrawTiledLayer_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./2d/DrawTiledLayer.js */ "./node_modules/jsge/src/base/2d/DrawTiledLayer.js");
 /* harmony import */ var _Exception_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Exception.js */ "./node_modules/jsge/src/base/Exception.js");
 /* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../constants.js */ "./node_modules/jsge/src/constants.js");
 /* harmony import */ var _WebGl_WebGlEngine_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./WebGl/WebGlEngine.js */ "./node_modules/jsge/src/base/WebGl/WebGlEngine.js");
 /* harmony import */ var _configs_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../configs.js */ "./node_modules/jsge/src/configs.js");
 /* harmony import */ var _GameStageData_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./GameStageData.js */ "./node_modules/jsge/src/base/GameStageData.js");
 /* harmony import */ var _modules_assetsm_dist_assetsm_min_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../modules/assetsm/dist/assetsm.min.js */ "./node_modules/jsge/modules/assetsm/dist/assetsm.min.js");
-/* harmony import */ var _DrawImageObject_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./DrawImageObject.js */ "./node_modules/jsge/src/base/DrawImageObject.js");
-/* harmony import */ var _DrawCircleObject_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./DrawCircleObject.js */ "./node_modules/jsge/src/base/DrawCircleObject.js");
-/* harmony import */ var _DrawConusObject_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./DrawConusObject.js */ "./node_modules/jsge/src/base/DrawConusObject.js");
-/* harmony import */ var _DrawLineObject_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./DrawLineObject.js */ "./node_modules/jsge/src/base/DrawLineObject.js");
-/* harmony import */ var _DrawPolygonObject_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./DrawPolygonObject.js */ "./node_modules/jsge/src/base/DrawPolygonObject.js");
-/* harmony import */ var _DrawRectObject_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./DrawRectObject.js */ "./node_modules/jsge/src/base/DrawRectObject.js");
-/* harmony import */ var _DrawTextObject_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./DrawTextObject.js */ "./node_modules/jsge/src/base/DrawTextObject.js");
+/* harmony import */ var _2d_DrawImageObject_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./2d/DrawImageObject.js */ "./node_modules/jsge/src/base/2d/DrawImageObject.js");
+/* harmony import */ var _2d_DrawCircleObject_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./2d/DrawCircleObject.js */ "./node_modules/jsge/src/base/2d/DrawCircleObject.js");
+/* harmony import */ var _2d_DrawConusObject_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./2d/DrawConusObject.js */ "./node_modules/jsge/src/base/2d/DrawConusObject.js");
+/* harmony import */ var _2d_DrawLineObject_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./2d/DrawLineObject.js */ "./node_modules/jsge/src/base/2d/DrawLineObject.js");
+/* harmony import */ var _2d_DrawPolygonObject_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./2d/DrawPolygonObject.js */ "./node_modules/jsge/src/base/2d/DrawPolygonObject.js");
+/* harmony import */ var _2d_DrawRectObject_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./2d/DrawRectObject.js */ "./node_modules/jsge/src/base/2d/DrawRectObject.js");
+/* harmony import */ var _2d_DrawTextObject_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./2d/DrawTextObject.js */ "./node_modules/jsge/src/base/2d/DrawTextObject.js");
 /* harmony import */ var _WebGl_ImagesDrawProgram_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./WebGl/ImagesDrawProgram.js */ "./node_modules/jsge/src/base/WebGl/ImagesDrawProgram.js");
 /* harmony import */ var _WebGl_PrimitivesDrawProgram_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./WebGl/PrimitivesDrawProgram.js */ "./node_modules/jsge/src/base/WebGl/PrimitivesDrawProgram.js");
 /* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../index.js */ "./node_modules/jsge/src/index.js");
@@ -3301,6 +3481,8 @@ class IRender {
         this.#isBoundariesPrecalculations = this.systemSettings.gameOptions.render.boundaries.wholeWorldPrecalculations;
 
         this.#webGlEngine = new _WebGl_WebGlEngine_js__WEBPACK_IMPORTED_MODULE_3__.WebGlEngine(this.#drawContext, this.#systemSettingsReference.gameOptions);
+        
+        this._registerRenderInit(this.#webGlEngine._initiateJsRender);
         if (this.systemSettings.gameOptions.optimization === _constants_js__WEBPACK_IMPORTED_MODULE_2__.CONST.OPTIMIZATION.WEB_ASSEMBLY.NATIVE_WAT ||
             this.systemSettings.gameOptions.optimization === _constants_js__WEBPACK_IMPORTED_MODULE_2__.CONST.OPTIMIZATION.WEB_ASSEMBLY.ASSEMBLY_SCRIPT) {
             this._registerRenderInit(this.#webGlEngine._initiateWasm);
@@ -3315,13 +3497,13 @@ class IRender {
         );
         this._registerRenderInit(this.#webGlEngine._initWebGlAttributes);
 
-        this._registerObjectRender(_DrawTextObject_js__WEBPACK_IMPORTED_MODULE_13__.DrawTextObject.name, this.#webGlEngine._bindText, _constants_js__WEBPACK_IMPORTED_MODULE_2__.CONST.WEBGL.DRAW_PROGRAMS.IMAGES);
-        this._registerObjectRender(_DrawRectObject_js__WEBPACK_IMPORTED_MODULE_12__.DrawRectObject.name, this.#webGlEngine._bindPrimitives, _constants_js__WEBPACK_IMPORTED_MODULE_2__.CONST.WEBGL.DRAW_PROGRAMS.PRIMITIVES);
-        this._registerObjectRender(_DrawPolygonObject_js__WEBPACK_IMPORTED_MODULE_11__.DrawPolygonObject.name, this.#webGlEngine._bindPrimitives, _constants_js__WEBPACK_IMPORTED_MODULE_2__.CONST.WEBGL.DRAW_PROGRAMS.PRIMITIVES);
-        this._registerObjectRender(_DrawCircleObject_js__WEBPACK_IMPORTED_MODULE_8__.DrawCircleObject.name, this.#webGlEngine._bindConus, _constants_js__WEBPACK_IMPORTED_MODULE_2__.CONST.WEBGL.DRAW_PROGRAMS.PRIMITIVES);
-        this._registerObjectRender(_DrawConusObject_js__WEBPACK_IMPORTED_MODULE_9__.DrawConusObject.name, this.#webGlEngine._bindConus, _constants_js__WEBPACK_IMPORTED_MODULE_2__.CONST.WEBGL.DRAW_PROGRAMS.PRIMITIVES);
-        this._registerObjectRender(_DrawTiledLayer_js__WEBPACK_IMPORTED_MODULE_0__.DrawTiledLayer.name, this.#webGlEngine._bindTileImages, _constants_js__WEBPACK_IMPORTED_MODULE_2__.CONST.WEBGL.DRAW_PROGRAMS.IMAGES);
-        this._registerObjectRender(_DrawLineObject_js__WEBPACK_IMPORTED_MODULE_10__.DrawLineObject.name, this.#webGlEngine._bindLine, _constants_js__WEBPACK_IMPORTED_MODULE_2__.CONST.WEBGL.DRAW_PROGRAMS.PRIMITIVES);
+        this._registerObjectRender(_2d_DrawTextObject_js__WEBPACK_IMPORTED_MODULE_13__.DrawTextObject.name, this.#webGlEngine._bindText, _constants_js__WEBPACK_IMPORTED_MODULE_2__.CONST.WEBGL.DRAW_PROGRAMS.IMAGES);
+        this._registerObjectRender(_2d_DrawRectObject_js__WEBPACK_IMPORTED_MODULE_12__.DrawRectObject.name, this.#webGlEngine._bindPrimitives, _constants_js__WEBPACK_IMPORTED_MODULE_2__.CONST.WEBGL.DRAW_PROGRAMS.PRIMITIVES);
+        this._registerObjectRender(_2d_DrawPolygonObject_js__WEBPACK_IMPORTED_MODULE_11__.DrawPolygonObject.name, this.#webGlEngine._bindPrimitives, _constants_js__WEBPACK_IMPORTED_MODULE_2__.CONST.WEBGL.DRAW_PROGRAMS.PRIMITIVES);
+        this._registerObjectRender(_2d_DrawCircleObject_js__WEBPACK_IMPORTED_MODULE_8__.DrawCircleObject.name, this.#webGlEngine._bindConus, _constants_js__WEBPACK_IMPORTED_MODULE_2__.CONST.WEBGL.DRAW_PROGRAMS.PRIMITIVES);
+        this._registerObjectRender(_2d_DrawConusObject_js__WEBPACK_IMPORTED_MODULE_9__.DrawConusObject.name, this.#webGlEngine._bindConus, _constants_js__WEBPACK_IMPORTED_MODULE_2__.CONST.WEBGL.DRAW_PROGRAMS.PRIMITIVES);
+        this._registerObjectRender(_2d_DrawTiledLayer_js__WEBPACK_IMPORTED_MODULE_0__.DrawTiledLayer.name, this.#webGlEngine._bindTileImages, _constants_js__WEBPACK_IMPORTED_MODULE_2__.CONST.WEBGL.DRAW_PROGRAMS.IMAGES);
+        this._registerObjectRender(_2d_DrawLineObject_js__WEBPACK_IMPORTED_MODULE_10__.DrawLineObject.name, this.#webGlEngine._bindLine, _constants_js__WEBPACK_IMPORTED_MODULE_2__.CONST.WEBGL.DRAW_PROGRAMS.PRIMITIVES);
     }
 
     /**
@@ -3383,8 +3565,8 @@ class IRender {
         return this.iLoader.filesWaitingForUpload === 0;
     };
 
-    initiateContext = () => {
-        return Promise.all(this.#initPromises.map(method => method()));
+    initiateContext = (stageData) => {
+        return Promise.all(this.#initPromises.map(method => method(stageData)));
     };
 
     clearContext() {
@@ -3426,7 +3608,7 @@ class IRender {
 
     /**
      * @ignore
-     * @param {function():Promise<void>} method 
+     * @param {function(GameStageData):Promise<void>} method 
      * @returns {void}
      */
     _registerRenderInit(method) {
@@ -3606,8 +3788,6 @@ class IRender {
                 }
                 this.stageData._setWholeMapBoundaries(boundaries);
                 this.stageData._mergeBoundaries(true);
-                console.warn("precalculated boundaries set");
-                console.log(this.stageData.getWholeWorldBoundaries());
                 resolve();
             } else {
                 resolve();
@@ -3669,41 +3849,36 @@ class IRender {
      */
     #drawBoundariesWebGl() {
         return new Promise((resolve) => {
-            const b = this.stageData.getBoundaries(),
+            const b = this.stageData.getRawBoundaries(),
                 eB = this.stageData.getEllipseBoundaries(),
                 pB = this.stageData.getPointBoundaries(),
-                len = b.length,
-                eLen = eB.length,
-                pLen = pB.length,
-                linesArray = [];
+                len = this.stageData.boundariesLen,
+                eLen = this.stageData.ellipseBLen,
+                pLen = this.stageData.pointBLen;
         
-            //for (let i = 0; i < len; i++) {
-            //    const item = b[i];
-            //    linesArray.push(item[0], item[1]);
-            //    linesArray.push(item[2], item[3]);
-            //}
-            this.#webGlEngine._drawLines(b.flat(), this.systemSettings.gameOptions.debug.boundaries.boundariesColor, this.systemSettings.gameOptions.debug.boundaries.boundariesWidth);
+            if (len)
+                this.#webGlEngine._drawLines(b, this.systemSettings.gameOptions.debug.boundaries.boundariesColor, this.systemSettings.gameOptions.debug.boundaries.boundariesWidth);
             if (eLen) {
                 //draw ellipse boundaries
-                eB.forEach(element => {
-                    const x = element[0],
-                        y = element[1],
-                        radX = element[2],
-                        radY = element[3],
+                for (let i = 0; i < eLen; i+=4) {
+                    const x = eB[i],
+                        y = eB[i+1],
+                        radX = eB[i+2],
+                        radY = eB[i+3],
                         vertices = _index_js__WEBPACK_IMPORTED_MODULE_16__.utils.calculateEllipseVertices(x, y, radX, radY);
                     this.#webGlEngine._drawPolygon({x: 0, y: 0, vertices, isOffsetTurnedOff: true}, this.stageData);
                     //this.#webGlEngine._drawLines(vertices, this.systemSettings.gameOptions.debug.boundaries.boundariesColor, this.systemSettings.gameOptions.debug.boundaries.boundariesWidth);
-                });
+                }
             }
             if (pLen) {
                 //draw point boundaries
-                pB.forEach(element => {
-                    const x = element[0],
-                        y = element[1],
+                for (let i = 0; i < pLen; i+=2) {
+                    const x = pB[i],
+                        y = pB[i+1],
                         vertices = [x,y, x+1,y+1];
 
                     this.#webGlEngine._drawLines(vertices, this.systemSettings.gameOptions.debug.boundaries.boundariesColor, this.systemSettings.gameOptions.debug.boundaries.boundariesWidth);
-                });
+                }
             }
             resolve();
         });
@@ -3763,7 +3938,7 @@ class IRender {
         return new Promise((resolve, reject) => {
             let viewPromises = [];
             const isBoundariesPrecalculations = this.#isBoundariesPrecalculations;
-            viewPromises.push(this.initiateContext());
+            viewPromises.push(this.initiateContext(this.#currentGameStageData));
             if (isBoundariesPrecalculations) {
                 console.warn("isBoundariesPrecalculations() is turned off");
                 //for (const view of this.#views.values()) {
@@ -3876,7 +4051,7 @@ class ISystem {
      */
     #iExtension;
     /**
-     * @type {INetwork}
+     * @type {INetwork | null}
      */
     #systemServerConnection;
     /**
@@ -3915,7 +4090,7 @@ class ISystem {
         this.#systemSettings = systemSettings;
         
         this.#systemAudioInterface = new _ISystemAudio_js__WEBPACK_IMPORTED_MODULE_3__.ISystemAudio(this.iLoader);
-        this.#systemServerConnection = new _INetwork_js__WEBPACK_IMPORTED_MODULE_2__.INetwork(systemSettings);
+        this.#systemServerConnection = systemSettings.network.enabled ? new _INetwork_js__WEBPACK_IMPORTED_MODULE_2__.INetwork(systemSettings) : null;
         this.#iRender = new _IRender_js__WEBPACK_IMPORTED_MODULE_8__.IRender(this.systemSettings, this.iLoader, canvasContainer);
         this.#iExtension = new _IExtension_js__WEBPACK_IMPORTED_MODULE_9__.IExtension(this, this.#iRender);
         this.#registeredStagesReference = registeredStages;
@@ -3956,7 +4131,7 @@ class ISystem {
     };
     
     /**
-     * @type { INetwork }
+     * @type { INetwork | null }
      */
     get iNetwork () {
         return this.#systemServerConnection;
@@ -4369,7 +4544,7 @@ class System {
      * A main factory method for create GameStage instances, <br>
      * register them in a System and call GameStage.register() stage
      * @param {string} screenPageName
-     * @param {typeof GameStage} stage
+     * @param {GameStage} stage
      */
     registerStage(screenPageName, stage) {
         if (screenPageName && typeof screenPageName === "string" && screenPageName.trim().length > 0) {
@@ -4404,6 +4579,116 @@ class System {
     #loadComplete = () => {
         this.#iSystem.stopGameStage(loadingPageName);
     };
+}
+
+/***/ }),
+
+/***/ "./node_modules/jsge/src/base/Temp/ImageTempStorage.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/jsge/src/base/Temp/ImageTempStorage.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ImageTempStorage: () => (/* binding */ ImageTempStorage)
+/* harmony export */ });
+/**
+ * storing current WebGLTexture
+ */
+class ImageTempStorage {
+    /**
+     * @type {Number}
+     */
+    #textureIndex;
+    /**
+     * @type {WebGLTexture}
+     */
+    #texture;
+    /**
+     * @type {boolean}
+     */
+    #isTextureRecalculated = true;
+    constructor(texture, textureIndex = 0) {
+        this.#texture = texture;
+        this.#textureIndex = textureIndex;
+    }
+
+    get _isTextureRecalculated() {
+        return this.#isTextureRecalculated;
+    }
+
+    set _isTextureRecalculated(value) {
+        this.#isTextureRecalculated = value;
+    }
+
+    get _texture() {
+        return this.#texture;
+    }
+
+    set _texture(value) {
+        this.#texture = value;
+    }
+
+    get _textureIndex() {
+        return this.#textureIndex;
+    }
+}
+
+/***/ }),
+
+/***/ "./node_modules/jsge/src/base/Temp/TiledLayerTempStorage.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/jsge/src/base/Temp/TiledLayerTempStorage.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   TiledLayerTempStorage: () => (/* binding */ TiledLayerTempStorage)
+/* harmony export */ });
+/**
+ * storing vectors and textures for DrawTiledLayer
+ */
+class TiledLayerTempStorage {
+    /**
+     * @type {Float32Array}
+     */
+    #vectors;
+    /**
+     * @type {Float32Array}
+     */
+    #textures;
+    /**
+     * @type {Int32Array}
+     */
+    #boundariesTempIndexes;
+    /**
+     * @type {number}
+     */
+    #bufferSize = 0;
+    constructor(cells, nonEmptyCells) {
+        this.#bufferSize = nonEmptyCells * 12;
+        this.#vectors = new Float32Array(this.#bufferSize);
+        this.#textures = new Float32Array(this.#bufferSize);
+        this.#boundariesTempIndexes = new Int32Array(cells * 4);
+    }
+
+    get vectors() {
+        return this.#vectors;
+    }
+
+    get textures() {
+        return this.#textures;
+    }
+
+    get _bTempIndexes() {
+        return this.#boundariesTempIndexes;
+    }
+
+    get bufferSize() {
+        return this.#bufferSize;
+    }
 }
 
 /***/ }),
@@ -4581,60 +4866,6 @@ const primitivesAttributes = ["a_position"];
 
 /***/ }),
 
-/***/ "./node_modules/jsge/src/base/WebGl/TextureStorage.js":
-/*!************************************************************!*\
-  !*** ./node_modules/jsge/src/base/WebGl/TextureStorage.js ***!
-  \************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   TextureStorage: () => (/* binding */ TextureStorage)
-/* harmony export */ });
-/**
- * storing current WebGLTexture
- */
-class TextureStorage {
-    /**
-     * @type {Number}
-     */
-    #textureIndex;
-    /**
-     * @type {WebGLTexture}
-     */
-    #texture;
-    /**
-     * @type {boolean}
-     */
-    #isTextureRecalculated = true;
-    constructor(texture, textureIndex = 0) {
-        this.#texture = texture;
-        this.#textureIndex = textureIndex;
-    }
-
-    get _isTextureRecalculated() {
-        return this.#isTextureRecalculated;
-    }
-
-    set _isTextureRecalculated(value) {
-        this.#isTextureRecalculated = value;
-    }
-
-    get _texture() {
-        return this.#texture;
-    }
-
-    set _texture(value) {
-        this.#texture = value;
-    }
-
-    get _textureIndex() {
-        return this.#textureIndex;
-    }
-}
-
-/***/ }),
-
 /***/ "./node_modules/jsge/src/base/WebGl/WebGlEngine.js":
 /*!*********************************************************!*\
   !*** ./node_modules/jsge/src/base/WebGl/WebGlEngine.js ***!
@@ -4647,9 +4878,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../constants.js */ "./node_modules/jsge/src/constants.js");
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils.js */ "./node_modules/jsge/src/utils.js");
-/* harmony import */ var _Exception_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Exception.js */ "./node_modules/jsge/src/base/Exception.js");
-/* harmony import */ var _GameStageData_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../GameStageData.js */ "./node_modules/jsge/src/base/GameStageData.js");
-/* harmony import */ var _TextureStorage_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./TextureStorage.js */ "./node_modules/jsge/src/base/WebGl/TextureStorage.js");
+/* harmony import */ var _2d_DrawTiledLayer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../2d/DrawTiledLayer.js */ "./node_modules/jsge/src/base/2d/DrawTiledLayer.js");
+/* harmony import */ var _Exception_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Exception.js */ "./node_modules/jsge/src/base/Exception.js");
+/* harmony import */ var _GameStageData_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../GameStageData.js */ "./node_modules/jsge/src/base/GameStageData.js");
+/* harmony import */ var _Temp_ImageTempStorage_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Temp/ImageTempStorage.js */ "./node_modules/jsge/src/base/Temp/ImageTempStorage.js");
+
 
 
 
@@ -4693,7 +4926,7 @@ class WebGlEngine {
 
     constructor(context, gameOptions) {
         if (!context || !(context instanceof WebGLRenderingContext)) {
-            (0,_Exception_js__WEBPACK_IMPORTED_MODULE_2__.Exception)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.ERROR_CODES.UNEXPECTED_INPUT_PARAMS, " context parameter should be specified and equal to WebGLRenderingContext");
+            (0,_Exception_js__WEBPACK_IMPORTED_MODULE_3__.Exception)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.ERROR_CODES.UNEXPECTED_INPUT_PARAMS, " context parameter should be specified and equal to WebGLRenderingContext");
         }
         
         this.#gl = context;
@@ -4715,6 +4948,70 @@ class WebGlEngine {
     _fixCanvasSize(width, height) {
         this.#gl.viewport(0, 0, width, height);
     }
+    _initiateJsRender = (stageData) => {
+        return new Promise((resolve, reject) => {
+            const tileLayers = stageData.getObjectsByInstance(_2d_DrawTiledLayer_js__WEBPACK_IMPORTED_MODULE_2__.DrawTiledLayer),
+                [ settingsWorldWidth, settingsWorldHeight ] = stageData.worldDimensions;
+
+            // count max possible boundaries sizes
+            let maxBSize = 0,
+                maxESize = 0,
+                maxPSize = 0,
+                maxWorldW = 0,
+                maxWorldH = 0;
+
+            tileLayers.forEach(tiledLayer => {
+                const setBoundaries = tiledLayer.setBoundaries,
+                    layerData = tiledLayer.layerData,
+                    tilemap = tiledLayer.tilemap,
+                    tilesets = tiledLayer.tilesets,
+                    { tileheight:dtheight, tilewidth:dtwidth } = tilemap,
+                    tilewidth = dtwidth,
+                    tileheight = dtheight;
+
+                for (let i = 0; i < tilesets.length; i++) {
+                    const layerCols = layerData.width,
+                        layerRows = layerData.height,
+                        worldW = tilewidth * layerCols,
+                        worldH = tileheight * layerRows;
+                        
+                        const polygonBondMax = layerData.polygonBoundariesLen,
+                            ellipseBondMax = layerData.ellipseBoundariesLen,
+                            pointBondMax = layerData.pointBoundariesLen; 
+    
+                    if (maxWorldW < worldW) {
+                        maxWorldW = worldW
+                    }
+                    if (maxWorldH < worldH) {
+                        maxWorldH = worldH;
+                    }
+                    
+                    if (setBoundaries) {
+                        maxBSize += polygonBondMax;
+                        maxESize += ellipseBondMax;
+                        maxPSize += pointBondMax;
+    
+                        // boundaries cleanups every draw cycles, we need to set world boundaries again
+                        
+                    }
+                }
+            });
+
+            if (maxWorldW !== 0 && maxWorldH !== 0 && (maxWorldW !== settingsWorldWidth || maxWorldH !== settingsWorldHeight)) {
+                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_3__.Warning)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.WARNING_CODES.UNEXPECTED_WORLD_SIZE, " World size from tilemap is different than settings one, fixing...");
+                stageData._setWorldDimensions(maxWorldW, maxWorldH);
+            }
+
+            if (this.#gameOptions.render.boundaries.mapBoundariesEnabled) {
+                maxBSize+=16; //4 sides * 4 cords x1,y1,x2,y,2
+            }
+            stageData._setMaxBoundariesSize(maxBSize, maxESize, maxPSize);
+            stageData._initiateBoundariesData();
+
+            resolve(true);
+        });
+
+    }
     _initWebGlAttributes = () => {
         const gl = this.#gl;
         gl.enable(gl.BLEND);
@@ -4729,7 +5026,7 @@ class WebGlEngine {
      * 
      * @returns {Promise<void>}
      */
-    _initiateWasm = () => {
+    _initiateWasm = (stageData) => {
         const url = this.#gameOptions.optimization === _constants_js__WEBPACK_IMPORTED_MODULE_0__.CONST.OPTIMIZATION.WEB_ASSEMBLY.NATIVE_WAT ? this.#gameOptions.optimizationWASMUrl : this.#gameOptions.optimizationAssemblyUrl;
         return new Promise((resolve, reject) => {
             this.layerData = new WebAssembly.Memory({
@@ -4819,23 +5116,23 @@ class WebGlEngine {
             if (compVertexShader) {
                 gl.attachShader(program, compVertexShader);
             } else {
-                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_2__.Exception)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.ERROR_CODES.WEBGL_ERROR, "#compileShader(vertexShaderSource) is null");
+                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_3__.Exception)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.ERROR_CODES.WEBGL_ERROR, "#compileShader(vertexShaderSource) is null");
             }
 
             const compFragmentShader = this.#compileShader(gl, fragmentShader, gl.FRAGMENT_SHADER);
             if (compFragmentShader) {
                 gl.attachShader(program, compFragmentShader);
             } else {
-                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_2__.Exception)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.ERROR_CODES.WEBGL_ERROR, "#compileShader(fragmentShaderSource) is null");
+                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_3__.Exception)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.ERROR_CODES.WEBGL_ERROR, "#compileShader(fragmentShaderSource) is null");
             }
 
             gl.linkProgram(program);
             if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
                 const info = gl.getProgramInfoLog(program);
-                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_2__.Exception)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.ERROR_CODES.WEBGL_ERROR, `Could not compile WebGL program. \n\n${info}`);
+                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_3__.Exception)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.ERROR_CODES.WEBGL_ERROR, `Could not compile WebGL program. \n\n${info}`);
             }
         } else {
-            (0,_Exception_js__WEBPACK_IMPORTED_MODULE_2__.Exception)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.ERROR_CODES.WEBGL_ERROR, "gl.createProgram() is null");
+            (0,_Exception_js__WEBPACK_IMPORTED_MODULE_3__.Exception)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.ERROR_CODES.WEBGL_ERROR, "gl.createProgram() is null");
         }
         return program;
     }
@@ -4867,10 +5164,10 @@ class WebGlEngine {
 
             if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
                 const info = gl.getShaderInfoLog(shader);
-                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_2__.Exception)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.ERROR_CODES.WEBGL_ERROR, "Couldn't compile webGl program. \n\n" + info);
+                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_3__.Exception)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.ERROR_CODES.WEBGL_ERROR, "Couldn't compile webGl program. \n\n" + info);
             }
         } else {
-            (0,_Exception_js__WEBPACK_IMPORTED_MODULE_2__.Exception)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.ERROR_CODES.WEBGL_ERROR, `gl.createShader(${shaderType}) is null`);
+            (0,_Exception_js__WEBPACK_IMPORTED_MODULE_3__.Exception)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.ERROR_CODES.WEBGL_ERROR, `gl.createShader(${shaderType}) is null`);
         }
         return shader;
     }
@@ -4906,7 +5203,7 @@ class WebGlEngine {
         gl.uniform2f(scaleLocation, scale[0], scale[1]);
         gl.uniform1f(rotationRotation, rotation);
         gl.uniform1f(fadeMinLocation, 0);
-
+        
         gl.enableVertexAttribArray(positionAttributeLocation);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.#positionBuffer);
@@ -4930,7 +5227,7 @@ class WebGlEngine {
             this.#bindPolygon(triangles);
             const len = triangles.length;
             if (len % 3 !== 0) {
-                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_2__.Warning)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.WARNING_CODES.POLYGON_VERTICES_NOT_CORRECT, `polygons ${renderObject.id}, vertices are not correct, skip drawing`);
+                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_3__.Warning)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.WARNING_CODES.POLYGON_VERTICES_NOT_CORRECT, `polygons ${renderObject.id}, vertices are not correct, skip drawing`);
                 return Promise.reject();
             }
             verticesNumber += len / 2;
@@ -5099,7 +5396,7 @@ class WebGlEngine {
         let textureStorage = renderObject._textureStorage;
         if (!textureStorage) {
             //const activeTexture = gl.getParameter(gl.ACTIVE_TEXTURE);
-            textureStorage = new _TextureStorage_js__WEBPACK_IMPORTED_MODULE_4__.TextureStorage(gl.createTexture());
+            textureStorage = new _Temp_ImageTempStorage_js__WEBPACK_IMPORTED_MODULE_5__.ImageTempStorage(gl.createTexture());
             renderObject._textureStorage = textureStorage;
         }
         if (textureStorage._isTextureRecalculated === true) {
@@ -5201,7 +5498,7 @@ class WebGlEngine {
 
         let textureStorage = renderObject._textureStorage;
         if (!textureStorage) {
-            textureStorage = new _TextureStorage_js__WEBPACK_IMPORTED_MODULE_4__.TextureStorage(gl.createTexture());
+            textureStorage = new _Temp_ImageTempStorage_js__WEBPACK_IMPORTED_MODULE_5__.ImageTempStorage(gl.createTexture());
             renderObject._textureStorage = textureStorage;
         } 
         if (textureStorage._isTextureRecalculated === true) {
@@ -5253,6 +5550,15 @@ class WebGlEngine {
 
         let verticesNumber = 0,
             isTextureBind = false;
+        gl.enableVertexAttribArray(positionAttributeLocation);
+        gl.enableVertexAttribArray(texCoordLocation);
+
+        // set the resolution
+        gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+        gl.uniform2f(translationLocation,translation[0], translation[1]);
+        gl.uniform2f(scaleLocation, scale[0], scale[1]);
+        gl.uniform1f(rotationRotation, rotation);
+
         for (let i = 0; i < renderLayerData.length; i++) {
             const data = renderLayerData[i],
                 vectors = data[0],
@@ -5267,16 +5573,10 @@ class WebGlEngine {
                 if (isTextureBind) {
                     await this._render(verticesNumber, gl.TRIANGLES);
                 }
-                // set the resolution
-                gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
-                gl.uniform2f(translationLocation,translation[0], translation[1]);
-                gl.uniform2f(scaleLocation, scale[0], scale[1]);
-                gl.uniform1f(rotationRotation, rotation);
                 
                 gl.bindBuffer(gl.ARRAY_BUFFER, this.#positionBuffer);
                 gl.bufferData(gl.ARRAY_BUFFER, vectors, gl.STATIC_DRAW);
 
-                gl.enableVertexAttribArray(positionAttributeLocation);
                 //Tell the attribute how to get data out of positionBuffer
                 const size = 2,
                     type = gl.FLOAT, // data is 32bit floats
@@ -5289,19 +5589,19 @@ class WebGlEngine {
                 gl.bindBuffer(gl.ARRAY_BUFFER, this.#texCoordBuffer);
                 gl.bufferData(gl.ARRAY_BUFFER, textures, gl.STATIC_DRAW);
 
-                gl.enableVertexAttribArray(texCoordLocation);
                 gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, offset);
 
                 let textureStorage = renderLayer._textureStorages[i];
                 
                 if (!textureStorage) {
-                    textureStorage = new _TextureStorage_js__WEBPACK_IMPORTED_MODULE_4__.TextureStorage(gl.createTexture(), i);
+                    textureStorage = new _Temp_ImageTempStorage_js__WEBPACK_IMPORTED_MODULE_5__.ImageTempStorage(gl.createTexture(), i);
                     renderLayer._setTextureStorage(i, textureStorage);
                 }
-                if (textureStorage._isTextureRecalculated === true) { 
+                if (textureStorage._isTextureRecalculated === true) {
                     this.#updateWebGlTexture(gl, textureStorage._texture, image, textureStorage._textureIndex);
                     textureStorage._isTextureRecalculated = false;
                 } else {
+                    //console.log("bind texture");
                     this.#bindTexture(gl, textureStorage._texture, textureStorage._textureIndex);
                 }
                 gl.uniform1i(u_imageLocation, textureStorage._textureIndex);
@@ -5353,7 +5653,7 @@ class WebGlEngine {
         
         const polygonVerticesNum = triangles.length;
         if (polygonVerticesNum % 3 !== 0) {
-            (0,_Exception_js__WEBPACK_IMPORTED_MODULE_2__.Warning)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.WARNING_CODES.POLYGON_VERTICES_NOT_CORRECT, "polygon boundaries vertices are not correct, skip drawing");
+            (0,_Exception_js__WEBPACK_IMPORTED_MODULE_3__.Warning)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.WARNING_CODES.POLYGON_VERTICES_NOT_CORRECT, "polygon boundaries vertices are not correct, skip drawing");
             return;
         }
         this.#bindPolygon(triangles);
@@ -5459,7 +5759,7 @@ class WebGlEngine {
 
         gl.bufferData(
             gl.ARRAY_BUFFER, 
-            new Float32Array(linesArray),
+            (linesArray instanceof Float32Array ? linesArray : new Float32Array(linesArray)),
             gl.STATIC_DRAW);
 
         verticesNumber += linesArray.length / 2;
@@ -5503,24 +5803,23 @@ class WebGlEngine {
                 { tileheight:dtheight, tilewidth:dtwidth } = tilemap,
                 tilewidth = dtwidth,
                 tileheight = dtheight,
-                [ settingsWorldWidth, settingsWorldHeight ] = pageData.worldDimensions,
                 [ canvasW, canvasH ] = pageData.canvasDimensions,
-                [ xOffset, yOffset ] = renderLayer.isOffsetTurnedOff === true ? [0,0] : pageData.worldOffset,
+                [ xOffset, yOffset ] = renderLayer.isOffsetTurnedOff === true ? [0, 0] : pageData.worldOffset,
                 boundariesCalculations = this.#gameOptions.render.boundaries.realtimeCalculations,
-                setBoundaries = renderLayer.setBoundaries;
-                
-            let boundariesRowsIndexes = new Map(),
-                boundaries = [],
-                ellipseBoundaries = [],
-                pointBoundaries = [],
+                setBoundaries = renderLayer.setBoundaries,
                 tileImagesData = [];
 
             if (!layerData) {
-                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_2__.Warning)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.WARNING_CODES.NOT_FOUND, "check tilemap and layers name");
+                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_3__.Warning)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.WARNING_CODES.NOT_FOUND, "check tilemap and layers name");
                 reject();
+            }
+
+            if (this.#gameOptions.render.boundaries.mapBoundariesEnabled) {
+                pageData._setMapBoundaries();
             }
             
             for (let i = 0; i < tilesets.length; i++) {
+                
                 const tilesetData = tilesets[i].data,
                     firstgid = tilesets[i].firstgid,
                     nextTileset = tilesets[i + 1],
@@ -5548,31 +5847,25 @@ class WebGlEngine {
                     skipColsRight = layerCols - screenCols - skipColsLeft,
                     cellSpacing = tilesetData.spacing,
                     cellMargin = tilesetData.margin,
-
-                    hasAnimations = tilesetData._hasAnimations,
-
-                    verticesBufferData = [],
-                    texturesBufferData = [],
-                    
+                    hasAnimations = tilesetData._hasAnimations;
+                    //console.log("non empty: ", layerData.nonEmptyCells);
                     // additional property which is set in DrawTiledLayer
-                    hasBoundaries = tilesetData._hasBoundaries,
-                    tilesetBoundaries = tilesetData._boundaries; // Map
-                
-                if (worldW !== settingsWorldWidth || worldH !== settingsWorldHeight) {
-                    (0,_Exception_js__WEBPACK_IMPORTED_MODULE_2__.Warning)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.WARNING_CODES.UNEXPECTED_WORLD_SIZE, " World size from tilemap is different than settings one, fixing...");
-                    pageData._setWorldDimensions(worldW, worldH);
-                }
-                if (setBoundaries) {
-                    // boundaries cleanups every draw cycles, we need to set world boundaries again
-                    if (this.#gameOptions.render.boundaries.mapBoundariesEnabled) {
-                        pageData._setMapBoundaries();
-                    }
-                }
+                    const hasBoundaries = tilesetData._hasBoundaries,
+                        tilesetBoundaries = tilesetData._boundaries,
+                        layerTilesetData = tilesets[i]._temp;
 
+                let v = layerTilesetData.vectors,
+                    t = layerTilesetData.textures,
+                    filledSize = 0;
+                    
+                v.fill(0);
+                t.fill(0);
+                let boundariesRowsIndexes = layerTilesetData._bTempIndexes;
+                const fullRowCellsNum = screenCols * 4;
+                
                 let mapIndex = skipRowsTop * layerCols;
                 for (let row = 0; row < screenRows; row++) {
                     mapIndex += skipColsLeft;
-                    let currentRowIndexes = new Map();
                     for (let col = 0; col < screenCols; col++) {
                         let tile = layerData.data[mapIndex];
 
@@ -5603,21 +5896,68 @@ class WebGlEngine {
                                 texY1 = (1 / atlasHeight) * atlasPosY,
                                 texX2 = texX1 + (1 / atlasWidth * tilesetwidth),
                                 texY2 = texY1 + (1 / atlasHeight * tilesetheight);
-                            verticesBufferData.push(
-                                vecX1, vecY1,
-                                vecX2, vecY1,
-                                vecX1, vecY2,
-                                vecX1, vecY2,
-                                vecX2, vecY1,
-                                vecX2, vecY2);
-                            texturesBufferData.push(
-                                texX1, texY1,
-                                texX2, texY1,
-                                texX1, texY2,
-                                texX1, texY2,
-                                texX2, texY1,
-                                texX2, texY2
-                            );
+
+                            // 0 vecX1
+                            v[filledSize] = vecX1;
+                            t[filledSize] = texX1;
+
+                            // 1 vecY1
+                            filledSize++;
+                            v[filledSize] = vecY1;
+                            t[filledSize] = texY1;
+                            
+                            // 2 vecX2
+                            filledSize++;
+                            v[filledSize] = vecX2;
+                            t[filledSize] = texX2;
+
+                            // 3 vecY1
+                            filledSize++;
+                            v[filledSize] = vecY1;
+                            t[filledSize] = texY1;
+
+                            // 4 vecX1
+                            filledSize++;
+                            v[filledSize] = vecX1;
+                            t[filledSize] = texX1;
+
+                            // 5 vecY2
+                            filledSize++;
+                            v[filledSize] = vecY2;
+                            t[filledSize] = texY2;
+
+                            // 6 vecX1
+                            filledSize++;
+                            v[filledSize] = vecX1;
+                            t[filledSize] = texX1;
+
+                            // 7 vecY2
+                            filledSize++;
+                            v[filledSize] = vecY2;
+                            t[filledSize] = texY2;
+
+                            // 8 vecX2
+                            filledSize++;
+                            v[filledSize] = vecX2;
+                            t[filledSize] = texX2;
+
+                            // 9 vecY1
+                            filledSize++;
+                            v[filledSize] = vecY1;
+                            t[filledSize] = texY1;
+
+                            // 10 vecX2, 
+                            filledSize++;
+                            v[filledSize] = vecX2;
+                            t[filledSize] = texX2;
+
+                            // 11 vecY2
+                            filledSize++;
+                            v[filledSize] = vecY2;
+                            t[filledSize] = texY2;
+
+                            filledSize++;
+                        
                             if (setBoundaries) {
                                 // if boundary is set in tilesetData
                                 let isBoundaryPreset = false;
@@ -5633,37 +5973,46 @@ class WebGlEngine {
                                                 baseY = mapPosY + object.y,
                                                 rotation = object.rotation;
                                             if (rotation !== 0) {
-                                                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_2__.Warning)("tilesetData.tiles.rotation property is not supported yet");
+                                                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_3__.Warning)("tilesetData.tiles.rotation property is not supported yet");
                                             }
                                             if (object.polygon) {
                                                 object.polygon.forEach(
                                                     (point, idx) => {
                                                         const next = object.polygon[idx + 1];
                                                         if (next) {
-                                                            boundaries.push([point.x + baseX, point.y + baseY, next.x + baseX, next.y + baseY]);
+                                                            pageData._addBoundaryLine(point.x + baseX, point.y + baseY, next.x + baseX, next.y + baseY);
                                                         } else {
                                                             // last point -> link to the first
                                                             const first = object.polygon[0];
-                                                            boundaries.push([point.x + baseX, point.y + baseY, first.x + baseX, first.y + baseY]);
+                                                            pageData._addBoundaryLine(point.x + baseX, point.y + baseY, first.x + baseX, first.y + baseY);
                                                         }
                                                     });
                                             } else if (object.point) {
                                                 // x/y coordinate
-                                                pointBoundaries.push([baseX, baseY]);
+                                                pageData._addPointBoundary(baseX, baseY);
                                             } else if (object.ellipse) {
                                                 const radX = object.width / 2,
                                                     radY = object.height / 2;
-                                                ellipseBoundaries.push([baseX + radX, baseY + radY, radX, radY]);
+                                                    
+                                                pageData._addEllipseBoundary(baseX + radX, baseY + radY, radX, radY);
                                             } else {
                                                 // object is rect
                                                 const width = object.width,
                                                     height = object.height,
                                                     x2 = width + baseX,
                                                     y2 = height + baseY;
-                                                boundaries.push([baseX, baseY, x2, baseY]);
-                                                boundaries.push([x2, baseY, x2, y2]);
-                                                boundaries.push([x2, y2, baseX, y2]);
-                                                boundaries.push([baseX, y2, baseX, baseY]);
+
+                                                //boundaries.push([baseX, baseY, x2, baseY]);
+                                                pageData._addBoundaryLine(baseX, baseY, x2, baseY);
+
+                                                //boundaries.push([x2, baseY, x2, y2]);
+                                                pageData._addBoundaryLine(x2, baseY, x2, y2);
+
+                                                //boundaries.push([x2, y2, baseX, y2]);
+                                                pageData._addBoundaryLine(x2, y2, baseX, y2);
+
+                                                //boundaries.push([baseX, y2, baseX, baseY]);
+                                                pageData._addBoundaryLine(baseX, y2, baseX, baseY);
                                             }
                                         });
                                     }
@@ -5671,25 +6020,24 @@ class WebGlEngine {
                                 // extract rect boundary for the whole tile
                                 }
                                 if (isBoundaryPreset === false) {
+                                    const boundaries = pageData.getRawBoundaries();
 
                                     let rightLine = [ mapPosX + tilesetwidth, mapPosY, mapPosX + tilesetwidth, mapPosY + tilesetheight ],
                                         bottomLine = [ mapPosX + tilesetwidth, mapPosY + tilesetheight, mapPosX, mapPosY + tilesetheight ],
                                         topLine = [ mapPosX, mapPosY, mapPosX + tilesetwidth, mapPosY],
-                                        leftLine = [ mapPosX, mapPosY + tilesetheight, mapPosX, mapPosY ],
-                                        currentAddedCellIndexes = [null, null, null, null];
+                                        leftLine = [ mapPosX, mapPosY + tilesetheight, mapPosX, mapPosY ];
                                     
-                                    const topRow = row !== 0 ? boundariesRowsIndexes.get(row - 1) : undefined;
-                                    if (topRow ) {
-                                        const topCellIndexes = topRow.get(col);
-                                        if (topCellIndexes) {
+                                    // top cell7
+                                    if (row !== 0) {
+                                        const topCellFirstIndex =  (row - 1) * fullRowCellsNum + (col * 4),
+                                            bottomTopLeftFirstIndex = boundariesRowsIndexes[topCellFirstIndex + INDEX_BOTTOM_LINE];
+                                        if (bottomTopLeftFirstIndex) {
                                             //remove double lines from top
-                                            const bottomTopCellIndex = topCellIndexes[INDEX_BOTTOM_LINE],
-                                                bottomTopCell = boundaries[bottomTopCellIndex];
-                                            if (bottomTopCell) {
-                                                const bottomTopCellX1 = bottomTopCell[INDEX_X1],
-                                                    bottomTopCellY1 = bottomTopCell[INDEX_Y1],
-                                                    bottomTopCellX2 = bottomTopCell[INDEX_X2],
-                                                    bottomTopCellY2 = bottomTopCell[INDEX_Y2],
+                                            const bottomTopCellX1 = boundaries[bottomTopLeftFirstIndex];
+                                            if (bottomTopCellX1) {
+                                                const bottomTopCellY1 = boundaries[bottomTopLeftFirstIndex + INDEX_Y1],
+                                                    bottomTopCellX2 = boundaries[bottomTopLeftFirstIndex + INDEX_X2],
+                                                    bottomTopCellY2 = boundaries[bottomTopLeftFirstIndex + INDEX_Y2],
                                                     topX1 = topLine[INDEX_X1],
                                                     topY1 = topLine[INDEX_Y1],
                                                     topX2 = topLine[INDEX_X2],
@@ -5697,139 +6045,127 @@ class WebGlEngine {
                                                 
                                                 if (topX1 === bottomTopCellX2 && topY1 === bottomTopCellY2 &&
                                                     topX2 === bottomTopCellX1 && topY2 === bottomTopCellY1) {
-                                                    boundaries[bottomTopCellIndex] = undefined;
+                                                    pageData._removeBoundaryLine(bottomTopLeftFirstIndex);
                                                     topLine = undefined;
                                                 }
                                             }
 
                                             // merge line from top right
-                                            const rightTopCellIndex = topCellIndexes[INDEX_RIGHT_LINE],
-                                                rightTopCell = boundaries[rightTopCellIndex];
-                                            if (rightTopCell) {
-                                                const rightTopCellX1 = rightTopCell[INDEX_X1],
-                                                    rightTopCellY1 = rightTopCell[INDEX_Y1],
-                                                    rightTopCellX2 = rightTopCell[INDEX_X2],
-                                                    rightX1 = rightLine[INDEX_X1],
-                                                    rightX2 = rightLine[INDEX_X2];
+                                            const rightTopRightFirstIndex = boundariesRowsIndexes[ topCellFirstIndex + INDEX_RIGHT_LINE],
+                                                rightTopCellX1 = boundaries[rightTopRightFirstIndex];
+                                            if (rightTopCellX1) {
+                                                const rightTopCellY1 = boundaries[rightTopRightFirstIndex + INDEX_Y1],
+                                                    rightTopCellX2 = boundaries[rightTopRightFirstIndex + INDEX_X2],
+                                                    rightX1 = boundaries[rightTopRightFirstIndex + INDEX_X1],
+                                                    rightX2 = boundaries[rightTopRightFirstIndex + INDEX_X2];
                                                 if (rightTopCellX1 === rightX2 && rightTopCellX2 === rightX1) {
-                                                    boundaries[rightTopCellIndex] = undefined;
+                                                    pageData._removeBoundaryLine(rightTopRightFirstIndex);
                                                     rightLine[INDEX_X1] = rightTopCellX1;
                                                     rightLine[INDEX_Y1] = rightTopCellY1;
                                                 }
                                             }
                                             // merge line from top left
-                                            const leftTopCellIndex = topCellIndexes[INDEX_LEFT_LINE],
-                                                leftTopCell = boundaries[leftTopCellIndex];
-                                            if (leftTopCell) {
-                                                const leftTopCellX1 = leftTopCell[INDEX_X1],
-                                                    leftTopCellX2 = leftTopCell[INDEX_X2],
-                                                    leftTopCellY2 = leftTopCell[INDEX_Y2],
+                                            const leftTopRightFirstIndex =  boundariesRowsIndexes[topCellFirstIndex + INDEX_LEFT_LINE],
+                                                leftTopCellX1 = boundaries[leftTopRightFirstIndex];
+                                            if (leftTopCellX1) {
+                                                const leftTopCellX2 = boundaries[leftTopRightFirstIndex + INDEX_X2],
+                                                    leftTopCellY2 = boundaries[leftTopRightFirstIndex + INDEX_Y2],
                                                     leftX1 = leftLine[INDEX_X1],
                                                     leftX2 = leftLine[INDEX_X2];
                                                 if (leftTopCellX1 === leftX2 && leftTopCellX2 === leftX1) {
-                                                    boundaries[leftTopCellIndex] = undefined;
+                                                    pageData._removeBoundaryLine(leftTopRightFirstIndex);
                                                     leftLine[INDEX_X2] = leftTopCellX2;
                                                     leftLine[INDEX_Y2] = leftTopCellY2;
                                                 }
                                             }
                                         }
                                     }
-                                    const leftCellIndexes = col !== 0 ? currentRowIndexes.get(col - 1) : undefined;
-                                    if (leftCellIndexes) {
+                                    // leftCell
+                                    if (col !== 0) {
+                                        
+                                        const leftCell = row * fullRowCellsNum + ((col - 1) * 4),
+                                            topLeftFirstCellIndex = boundariesRowsIndexes[leftCell];
+                                        if (topLeftFirstCellIndex) {
 
-                                        //remove double lines from left
-                                        const rightLeftCellIndex = leftCellIndexes[INDEX_RIGHT_LINE],
-                                            rightLeftCell = boundaries[rightLeftCellIndex],
-                                            rightLeftCellX1 = rightLeftCell[INDEX_X1],
-                                            rightLeftCellY1 = rightLeftCell[INDEX_Y1],
-                                            rightLeftCellX2 = rightLeftCell[INDEX_X2],
-                                            rightLeftCellY2 = rightLeftCell[INDEX_Y2],
-                                            leftX1 = leftLine[INDEX_X1],
-                                            leftY1 = leftLine[INDEX_Y1],
-                                            leftX2 = leftLine[INDEX_X2],
-                                            leftY2 = leftLine[INDEX_Y2];
+                                            //remove double lines from left
+                                            const rightLeftCellIndex = boundariesRowsIndexes[leftCell + INDEX_RIGHT_LINE],
+                                                rightLeftX1 = boundaries[rightLeftCellIndex],
+                                                rightLeftCellX1 = rightLeftX1,
+                                                rightLeftCellY1 = boundaries[rightLeftCellIndex + INDEX_Y1],
+                                                rightLeftCellX2 = boundaries[rightLeftCellIndex + INDEX_X2],
+                                                rightLeftCellY2 = boundaries[rightLeftCellIndex + INDEX_Y2],
+                                                leftX1 = leftLine[INDEX_X1],
+                                                leftY1 = leftLine[INDEX_Y1],
+                                                leftX2 = leftLine[INDEX_X2],
+                                                leftY2 = leftLine[INDEX_Y2];
 
-                                        if (leftX1 === rightLeftCellX2 && leftY1 === rightLeftCellY2 &&
-                                            leftX2 === rightLeftCellX1 && leftY2 === rightLeftCellY1) {
-                                            boundaries[rightLeftCellIndex] = undefined;
-                                            leftLine = undefined;
-                                        }
-
-                                        //merge long lines from left top
-                                        const topLeftCellIndex = leftCellIndexes[INDEX_TOP_LINE],
-                                            topLeftCell = boundaries[topLeftCellIndex];
-                                        if (topLeftCell && topLine) {
-                                            const topLeftCellX1 = topLeftCell[INDEX_X1],
-                                                topLeftCellY1 = topLeftCell[INDEX_Y1],
-                                                topLeftCellY2 = topLeftCell[INDEX_Y2],
-                                                topY1 = topLine[INDEX_Y1],
-                                                topY2 = topLine[INDEX_Y2];
-                                            if (topLeftCellY1 === topY2 && topLeftCellY2 === topY1 ) {
-                                                boundaries[topLeftCellIndex] = undefined;
-                                                topLine[INDEX_X1] = topLeftCellX1;
-                                                topLine[INDEX_Y1] = topLeftCellY1;
+                                            if (leftX1 === rightLeftCellX2 && leftY1 === rightLeftCellY2 &&
+                                                leftX2 === rightLeftCellX1 && leftY2 === rightLeftCellY1) {
+                                                pageData._removeBoundaryLine(rightLeftCellIndex);
+                                                leftLine = undefined;
                                             }
-                                        }
 
-                                        // merge long lines from left bottom
-                                        const bottomLeftCellIndex = leftCellIndexes[INDEX_BOTTOM_LINE],
-                                            bottomLeftCell = boundaries[bottomLeftCellIndex];
-                                        if (bottomLeftCell) {
-                                            const bottomLeftCellY1 = bottomLeftCell[INDEX_Y1],
-                                                bottomLeftCellX2 = bottomLeftCell[INDEX_X2],
-                                                bottomLeftCellY2 = bottomLeftCell[INDEX_Y2],
-                                                bottomY1 = bottomLine[INDEX_Y1],
-                                                bottomY2 = bottomLine[INDEX_Y2];
-                                            if (bottomLeftCellY1 === bottomY2 && bottomLeftCellY2 === bottomY1 ) {
-                                                boundaries[bottomLeftCellIndex] = undefined;
-                                                //opposite direction
-                                                bottomLine[INDEX_X2] = bottomLeftCellX2;
-                                                bottomLine[INDEX_Y2] = bottomLeftCellY2;
+                                            //merge long lines from left top
+                                            const topLeftCellX1 = boundaries[topLeftFirstCellIndex];
+                                            if (topLeftCellX1 && topLine) {
+                                                const topLeftCellY1 = boundaries[topLeftFirstCellIndex + INDEX_Y1],
+                                                    topLeftCellY2 = boundaries[topLeftFirstCellIndex + INDEX_Y2],
+                                                    topY1 = topLine[INDEX_Y1],
+                                                    topY2 = topLine[INDEX_Y2];
+                                                if (topLeftCellY1 === topY2 && topLeftCellY2 === topY1 ) {
+                                                    pageData._removeBoundaryLine(topLeftFirstCellIndex);
+                                                    topLine[INDEX_X1] = topLeftCellX1;
+                                                    topLine[INDEX_Y1] = topLeftCellY1;
+                                                }
                                             }
-                                        }
 
+                                            // merge long lines from left bottom
+                                            const bottomLeftFirstCellIndex = boundariesRowsIndexes[leftCell + INDEX_BOTTOM_LINE],
+                                                bottomLeftCellX1 = boundaries[bottomLeftFirstCellIndex];
+                                            if (bottomLeftCellX1) {
+                                                const bottomLeftCellY1 = boundaries[bottomLeftFirstCellIndex + INDEX_Y1],
+                                                    bottomLeftCellX2 = boundaries[bottomLeftFirstCellIndex + INDEX_X2],
+                                                    bottomLeftCellY2 = boundaries[bottomLeftFirstCellIndex + INDEX_Y2],
+                                                    bottomY1 = bottomLine[INDEX_Y1],
+                                                    bottomY2 = bottomLine[INDEX_Y2];
+                                                if (bottomLeftCellY1 === bottomY2 && bottomLeftCellY2 === bottomY1 ) {
+                                                    pageData._removeBoundaryLine(bottomLeftFirstCellIndex);
+                                                    //opposite direction
+                                                    bottomLine[INDEX_X2] = bottomLeftCellX2;
+                                                    bottomLine[INDEX_Y2] = bottomLeftCellY2;
+                                                }
+                                            }
+
+                                        }
                                     }
-
+                                    const currentCellIndex = row * fullRowCellsNum + (col * 4);
                                     if (topLine) {
-                                        boundaries.push(topLine);
-                                        currentAddedCellIndexes[INDEX_TOP_LINE] = boundaries.length - 1;
+                                        pageData._addBoundaryLine(topLine[0], topLine[1], topLine[2], topLine[3]);
+                                        boundariesRowsIndexes[currentCellIndex + INDEX_TOP_LINE] = pageData.boundariesLen - 4;
                                     }
-                                    boundaries.push(rightLine);
-                                    currentAddedCellIndexes[INDEX_RIGHT_LINE] = boundaries.length - 1;
-                                    boundaries.push(bottomLine);
-                                    currentAddedCellIndexes[INDEX_BOTTOM_LINE] = boundaries.length - 1;
+                                    pageData._addBoundaryLine(rightLine[0], rightLine[1], rightLine[2], rightLine[3]);
+                                    boundariesRowsIndexes[currentCellIndex + INDEX_RIGHT_LINE] = pageData.boundariesLen - 4;
+                                    pageData._addBoundaryLine(bottomLine[0], bottomLine[1], bottomLine[2], bottomLine[3]);
+                                    boundariesRowsIndexes[currentCellIndex + INDEX_BOTTOM_LINE] = pageData.boundariesLen - 4;
                                     if (leftLine) {
-                                        boundaries.push(leftLine);
-                                        currentAddedCellIndexes[INDEX_LEFT_LINE] = boundaries.length - 1;
+                                        pageData._addBoundaryLine(leftLine[0], leftLine[1], leftLine[2], leftLine[3]);
+                                        boundariesRowsIndexes[currentCellIndex + INDEX_LEFT_LINE] = pageData.boundariesLen - 4;
                                     }
-                                    //save values indexes cols info
-                                    currentRowIndexes.set(col, currentAddedCellIndexes);
+                                    
                                 }
                             }
                         }
                         mapIndex++;
                     }
-                    if (currentRowIndexes.size > 0) {
-                        //save values indexes rows info
-                        boundariesRowsIndexes.set(row, currentRowIndexes);
-                    }
                     mapIndex += skipColsRight;
                 }
+                //console.log(boundariesRowsIndexes);
                 //this.#bindTileImages(verticesBufferData, texturesBufferData, atlasImage, tilesetData.name, renderLayer._maskId);
-                tileImagesData.push([new Float32Array(verticesBufferData), new Float32Array(texturesBufferData), tilesetData.name, atlasImage]);
+                tileImagesData.push([v, t, tilesetData.name, atlasImage]);
+                //cleanup
+                boundariesRowsIndexes.fill(0);
             }
             
-            if (setBoundaries) {
-                // filter undefined value
-                const filtered = boundaries.filter(array => array);
-                pageData._addBoundariesArray(filtered);
-                if (ellipseBoundaries.length > 0) {
-                    pageData._addEllipseBoundaries(ellipseBoundaries);
-                }
-                if (pointBoundaries.length > 0) {
-                    pageData._addPointBoundaries(pointBoundaries);
-                }
-            }
             resolve(tileImagesData);
         });
     }
@@ -5843,16 +6179,19 @@ class WebGlEngine {
                 { tileheight:dtheight, tilewidth:dtwidth } = tilemap,
                 tilewidth = dtwidth,
                 tileheight = dtheight,
-                setBoundaries = renderLayer.setBoundaries,
-                [ settingsWorldWidth, settingsWorldHeight ] = pageData.worldDimensions,
                 [ canvasW, canvasH ] = pageData.canvasDimensions,
                 [ xOffset, yOffset ] = renderLayer.isOffsetTurnedOff === true ? [0,0] : pageData.worldOffset;
             
             let tileImagesData = [];
             if (!layerData) {
-                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_2__.Warning)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.WARNING_CODES.NOT_FOUND, "check tilemap and layers name");
+                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_3__.Warning)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.WARNING_CODES.NOT_FOUND, "check tilemap and layers name");
                 reject();
             }
+
+            if (this.#gameOptions.render.boundaries.mapBoundariesEnabled) {
+                pageData._setMapBoundaries();
+            }
+
             for (let i = 0; i <= tilesets.length - 1; i++) {
                 const tilesetData = tilesets[i].data,
                     firstgid = tilesets[i].firstgid,
@@ -5874,16 +6213,17 @@ class WebGlEngine {
                     atlasWidth = atlasImage.width,
                     atlasHeight = atlasImage.height,
                     cellSpacing = tilesetData.spacing,
-                    cellMargin = tilesetData.margin;
+                    cellMargin = tilesetData.margin,
+                    layerTilesetData = tilesets[i]._temp;
                 
                 let mapIndex = 0,
-                    verticesBufferData = [],
-                    texturesBufferData = [];
+                    v = layerTilesetData.vectors,
+                    t = layerTilesetData.textures,
+                    filledSize = 0;
+                
+                v.fill(0);
+                t.fill(0);
 
-                if (worldW !== settingsWorldWidth || worldH !== settingsWorldHeight) {
-                    (0,_Exception_js__WEBPACK_IMPORTED_MODULE_2__.Warning)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.WARNING_CODES.UNEXPECTED_WORLD_SIZE, " World size from tilemap is different than settings one, fixing...");
-                    pageData._setWorldDimensions(worldW, worldH);
-                }
                 for (let row = 0; row < layerRows; row++) {
                     for (let col = 0; col < layerCols; col++) {
                         let tile = layerData.data[mapIndex];
@@ -5903,29 +6243,72 @@ class WebGlEngine {
                                 texY1 = 1 / atlasHeight * atlasPosY,
                                 texX2 = texX1 + (1 / atlasWidth * tilesetwidth),
                                 texY2 = texY1 + (1 / atlasHeight * tilesetheight);
-                                
-                            verticesBufferData.push(
-                                vecX1, vecY1,
-                                vecX2, vecY1,
-                                vecX1, vecY2,
-                                vecX1, vecY2,
-                                vecX2, vecY1,
-                                vecX2, vecY2);
-                            texturesBufferData.push(
-                                texX1, texY1,
-                                texX2, texY1,
-                                texX1, texY2,
-                                texX1, texY2,
-                                texX2, texY1,
-                                texX2, texY2
-                            );
+                             
+                            // 0 vecX1
+                            v[filledSize] = vecX1;
+                            t[filledSize] = texX1;
 
+                            // 1 vecY1
+                            filledSize++;
+                            v[filledSize] = vecY1;
+                            t[filledSize] = texY1;
+                            
+                            // 2 vecX2
+                            filledSize++;
+                            v[filledSize] = vecX2;
+                            t[filledSize] = texX2;
+
+                            // 3 vecY1
+                            filledSize++;
+                            v[filledSize] = vecY1;
+                            t[filledSize] = texY1;
+
+                            // 4 vecX1
+                            filledSize++;
+                            v[filledSize] = vecX1;
+                            t[filledSize] = texX1;
+
+                            // 5 vecY2
+                            filledSize++;
+                            v[filledSize] = vecY2;
+                            t[filledSize] = texY2;
+
+                            // 6 vecX1
+                            filledSize++;
+                            v[filledSize] = vecX1;
+                            t[filledSize] = texX1;
+
+                            // 7 vecY2
+                            filledSize++;
+                            v[filledSize] = vecY2;
+                            t[filledSize] = texY2;
+
+                            // 8 vecX2
+                            filledSize++;
+                            v[filledSize] = vecX2;
+                            t[filledSize] = texX2;
+
+                            // 9 vecY1
+                            filledSize++;
+                            v[filledSize] = vecY1;
+                            t[filledSize] = texY1;
+
+                            // 10 vecX2, 
+                            filledSize++;
+                            v[filledSize] = vecX2;
+                            t[filledSize] = texX2;
+
+                            // 11 vecY2
+                            filledSize++;
+                            v[filledSize] = vecY2;
+                            t[filledSize] = texY2;
+
+                            filledSize++;
+                            
                         }
                         mapIndex++;
                     }
                 }
-                const v = new Float32Array(verticesBufferData);
-                const t = new Float32Array(texturesBufferData);
                 tileImagesData.push([v, t, tilesetData.name, atlasImage]);
             }
             resolve(tileImagesData);
@@ -5959,8 +6342,12 @@ class WebGlEngine {
             // set data for webgl processing
             this.layerDataFloat32.set(layerData.data);
             if (!layerData) {
-                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_2__.Warning)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.WARNING_CODES.NOT_FOUND, "check tilemap and layers name");
+                (0,_Exception_js__WEBPACK_IMPORTED_MODULE_3__.Warning)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.WARNING_CODES.NOT_FOUND, "check tilemap and layers name");
                 reject();
+            }
+
+            if (this.#gameOptions.render.boundaries.mapBoundariesEnabled) {
+                pageData._setMapBoundaries();
             }
             
             for (let i = 0; i < tilesets.length; i++) {
@@ -5990,31 +6377,14 @@ class WebGlEngine {
                     texturesCoordsItemsNum = 12,
                     vectorDataItemsNum = offsetDataItemsFilteredNum * vectorCoordsItemsNum,
                     texturesDataItemsNum = offsetDataItemsFilteredNum * texturesCoordsItemsNum,
-                    cellSpacing = tilesetData.spacing,
-                    cellMargin = tilesetData.margin;
+                    cellSpacing = tilesetData.spacing;
                 
-                if (worldW !== settingsWorldWidth || worldH !== settingsWorldHeight) {
-                    (0,_Exception_js__WEBPACK_IMPORTED_MODULE_2__.Warning)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.WARNING_CODES.UNEXPECTED_WORLD_SIZE, " World size from tilemap is different than settings one, fixing...");
-                    pageData._setWorldDimensions(worldW, worldH);
-                }
-
-                //if (this.canvas.width !== worldW || this.canvas.height !== worldH) {
-                //    this._setCanvasSize(worldW, worldH);
-                //}
-                // boundaries cleanups every draw cycles, we need to set world boundaries again
-                if (this.#gameOptions.render.boundaries.mapBoundariesEnabled) {
-                    pageData._setMapBoundaries();
-                }
                 const itemsProcessed = this.calculateBufferData(dataCellSizeBytes, offsetDataItemsFullNum, vectorDataItemsNum, layerRows, layerCols, dtwidth, dtheight, tilesetwidth, tilesetheight, atlasColumns, atlasWidth, atlasHeight, xOffset, yOffset, firstgid, nextgid, cellSpacing, setBoundaries);
                 
                 const verticesBufferData = itemsProcessed > 0 ? this.layerDataFloat32.slice(offsetDataItemsFullNum, vectorDataItemsNum + offsetDataItemsFullNum) : [],
                     texturesBufferData = itemsProcessed > 0 ? this.layerDataFloat32.slice(vectorDataItemsNum + offsetDataItemsFullNum, vectorDataItemsNum + texturesDataItemsNum + offsetDataItemsFullNum) : [];
                     
                 tileImagesData.push([verticesBufferData, texturesBufferData, tilesetData.name, atlasImage]);
-                if (setBoundaries) {
-                    pageData._mergeBoundaries();
-                    renderLayer.setBoundaries = false;
-                }
             }
             resolve(tileImagesData);
         });
@@ -6085,7 +6455,7 @@ class WebGlEngine {
                 skipCount += 1;
                 if (skipCount > processedVerticesLen) {
                     // sometimes fails
-                    (0,_Exception_js__WEBPACK_IMPORTED_MODULE_2__.Warning)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.WARNING_CODES.TRIANGULATE_ISSUE, "Can't extract all triangles vertices.");
+                    (0,_Exception_js__WEBPACK_IMPORTED_MODULE_3__.Warning)(_constants_js__WEBPACK_IMPORTED_MODULE_0__.WARNING_CODES.TRIANGULATE_ISSUE, "Can't extract all triangles vertices.");
                     return triangulatedPolygon;
                 }
                 i++;
@@ -6203,7 +6573,7 @@ class SystemSettings {
         // no other variants only WEBGL for now
         library: _constants_js__WEBPACK_IMPORTED_MODULE_0__.CONST.LIBRARY.WEBGL,
         optimization: _constants_js__WEBPACK_IMPORTED_MODULE_0__.CONST.OPTIMIZATION.NATIVE_JS.OPTIMIZED,
-        optimizationWASMUrl: "/src/wa/calculateBufferDataWat.wasm",
+        optimizationWASMUrl: "./src/wa/calculateBufferDataWat.wasm",
         optimizationAssemblyUrl: "/src/wa/calculateBufferDataAssembly.wasm",
         loadingScreen: {
             backgroundColor:  "rgba(128, 128, 128, 0.6)",
@@ -6238,6 +6608,8 @@ class SystemSettings {
     
 
     static network = {
+        // disable INetwork by default
+        enabled: false,
         address: "https://gameserver.reslc.ru:9009",
         gatherRoomsInfoInterval: 5000
     };
@@ -6466,7 +6838,7 @@ class LoadingStage extends _base_GameStage_js__WEBPACK_IMPORTED_MODULE_0__.GameS
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   CONST: () => (/* reexport safe */ _constants_js__WEBPACK_IMPORTED_MODULE_6__.CONST),
-/* harmony export */   DrawImageObject: () => (/* reexport safe */ _base_DrawImageObject_js__WEBPACK_IMPORTED_MODULE_2__.DrawImageObject),
+/* harmony export */   DrawImageObject: () => (/* reexport safe */ _base_2d_DrawImageObject_js__WEBPACK_IMPORTED_MODULE_2__.DrawImageObject),
 /* harmony export */   GameStage: () => (/* reexport safe */ _base_GameStage_js__WEBPACK_IMPORTED_MODULE_1__.GameStage),
 /* harmony export */   ISystemAudio: () => (/* reexport safe */ _base_ISystemAudio_js__WEBPACK_IMPORTED_MODULE_3__.ISystemAudio),
 /* harmony export */   Primitives: () => (/* reexport module object */ _base_Primitives_js__WEBPACK_IMPORTED_MODULE_4__),
@@ -6476,7 +6848,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _base_System_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./base/System.js */ "./node_modules/jsge/src/base/System.js");
 /* harmony import */ var _base_GameStage_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./base/GameStage.js */ "./node_modules/jsge/src/base/GameStage.js");
-/* harmony import */ var _base_DrawImageObject_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./base/DrawImageObject.js */ "./node_modules/jsge/src/base/DrawImageObject.js");
+/* harmony import */ var _base_2d_DrawImageObject_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./base/2d/DrawImageObject.js */ "./node_modules/jsge/src/base/2d/DrawImageObject.js");
 /* harmony import */ var _base_ISystemAudio_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./base/ISystemAudio.js */ "./node_modules/jsge/src/base/ISystemAudio.js");
 /* harmony import */ var _base_Primitives_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./base/Primitives.js */ "./node_modules/jsge/src/base/Primitives.js");
 /* harmony import */ var _configs_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./configs.js */ "./node_modules/jsge/src/configs.js");
@@ -6978,15 +7350,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   drawRotateYObject: () => (/* binding */ drawRotateYObject),
 /* harmony export */   drawRotateYText: () => (/* binding */ drawRotateYText)
 /* harmony export */ });
-/* harmony import */ var jsge_src_base_DrawRectObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jsge/src/base/DrawRectObject.js */ "./node_modules/jsge/src/base/DrawRectObject.js");
-/* harmony import */ var jsge_src_base_WebGl_TextureStorage_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jsge/src/base/WebGl/TextureStorage.js */ "./node_modules/jsge/src/base/WebGl/TextureStorage.js");
-/* harmony import */ var jsge_src_base_DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! jsge/src/base/DrawShapeObject.js */ "./node_modules/jsge/src/base/DrawShapeObject.js");
+/* harmony import */ var jsge_src_base_2d_DrawRectObject_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jsge/src/base/2d/DrawRectObject.js */ "./node_modules/jsge/src/base/2d/DrawRectObject.js");
+/* harmony import */ var jsge_src_base_Temp_ImageTempStorage_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jsge/src/base/Temp/ImageTempStorage.js */ "./node_modules/jsge/src/base/Temp/ImageTempStorage.js");
+/* harmony import */ var jsge_src_base_2d_DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! jsge/src/base/2d/DrawShapeObject.js */ "./node_modules/jsge/src/base/2d/DrawShapeObject.js");
 /* harmony import */ var jsge_src_base_Primitives_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! jsge/src/base/Primitives.js */ "./node_modules/jsge/src/base/Primitives.js");
 
 
 
 
-class RotateYRect extends jsge_src_base_DrawRectObject_js__WEBPACK_IMPORTED_MODULE_0__.DrawRectObject {
+class RotateYRect extends jsge_src_base_2d_DrawRectObject_js__WEBPACK_IMPORTED_MODULE_0__.DrawRectObject {
     z = 0;
     originalXPos;
 
@@ -7025,7 +7397,7 @@ class RotateYRect extends jsge_src_base_DrawRectObject_js__WEBPACK_IMPORTED_MODU
     }
 }
 
-class RotateYText extends jsge_src_base_DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_2__.DrawShapeObject {
+class RotateYText extends jsge_src_base_2d_DrawShapeObject_js__WEBPACK_IMPORTED_MODULE_2__.DrawShapeObject {
     z = 0;
     originalXPos;
     #font;
@@ -7420,7 +7792,7 @@ const drawRotateYText = (renderObject, gl, pageData, program, vars) => {
     let textureStorage = renderObject._textureStorage;
     if (!textureStorage) {
         //const activeTexture = gl.getParameter(gl.ACTIVE_TEXTURE);
-        textureStorage = new jsge_src_base_WebGl_TextureStorage_js__WEBPACK_IMPORTED_MODULE_1__.TextureStorage(gl.createTexture());
+        textureStorage = new jsge_src_base_Temp_ImageTempStorage_js__WEBPACK_IMPORTED_MODULE_1__.ImageTempStorage(gl.createTexture());
         renderObject._textureStorage = textureStorage;
     }
     if (textureStorage._isTextureRecalculated === true) {
@@ -7992,7 +8364,7 @@ class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
             currentRowIndex = this.#currentAttempt - 1,
             nextLetter = this.#rows[currentRowIndex][currentLetterLength],
             nextLetterCard = nextLetter ? nextLetter.card : null;
-
+            
         if (currentLetterLength !== this.#letterNum) {
             this.#currentWord += letter;
             const x = nextLetterCard.x + nextLetterCard.width / 3.2,
@@ -8005,7 +8377,10 @@ class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
             nextLetter.card.y += yShift;
 
             setTimeout(() => {
-                nextLetter.letter.y -= yShift;
+                // if letter was not destroyed
+                if (nextLetter.letter) {
+                    nextLetter.letter.y -= yShift;
+                }
                 nextLetter.card.y -= yShift;
             }, 100);
             if (currentLetterLength + 1 === this.#letterNum) {
@@ -8250,7 +8625,7 @@ class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
             letterCardSpace = this.#letterCardSpaces,
             attempts = this.#attempts,
             w = letterNum * letterCardSize + ((letterNum - 1) * letterCardSpace),
-            h = attempts * letterCardSize + ((attempts - 1) * letterCardSpace);
+            h = attempts * letterCardSize + ((attempts - 1) * letterCardSpace) + this.#shiftSize;
         
         this.#boardWidth = w;
         this.#boardHeight = h;
@@ -8530,6 +8905,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 jsge__WEBPACK_IMPORTED_MODULE_1__.SystemSettings.customSettings = _settings_js__WEBPACK_IMPORTED_MODULE_2__.settings;
+jsge__WEBPACK_IMPORTED_MODULE_1__.SystemSettings.gameOptions.render.minCycleTime = 32;
 
 document.addEventListener("DOMContentLoaded", function(event) { 
     //do work

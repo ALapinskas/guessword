@@ -312,7 +312,7 @@ export class WordsGame extends GameStage {
             currentRowIndex = this.#currentAttempt - 1,
             nextLetter = this.#rows[currentRowIndex][currentLetterLength],
             nextLetterCard = nextLetter ? nextLetter.card : null;
-
+            
         if (currentLetterLength !== this.#letterNum) {
             this.#currentWord += letter;
             const x = nextLetterCard.x + nextLetterCard.width / 3.2,
@@ -325,7 +325,10 @@ export class WordsGame extends GameStage {
             nextLetter.card.y += yShift;
 
             setTimeout(() => {
-                nextLetter.letter.y -= yShift;
+                // if letter was not destroyed
+                if (nextLetter.letter) {
+                    nextLetter.letter.y -= yShift;
+                }
                 nextLetter.card.y -= yShift;
             }, 100);
             if (currentLetterLength + 1 === this.#letterNum) {
@@ -570,7 +573,7 @@ export class WordsGame extends GameStage {
             letterCardSpace = this.#letterCardSpaces,
             attempts = this.#attempts,
             w = letterNum * letterCardSize + ((letterNum - 1) * letterCardSpace),
-            h = attempts * letterCardSize + ((attempts - 1) * letterCardSpace);
+            h = attempts * letterCardSize + ((attempts - 1) * letterCardSpace) + this.#shiftSize;
         
         this.#boardWidth = w;
         this.#boardHeight = h;
