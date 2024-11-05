@@ -473,12 +473,12 @@ export class WordsGame extends GameStage {
                     //card.bgColor = "rgba(0,0,0,1)";
                 }
                 card.rotate();
-            } );
+            }, 15);
         });
     }
 
     #switchScreen = () => {
-        console.log("switch screen");
+        //console.log("switch screen");
         document.getElementById("first_screen").style.display = "none";
         document.getElementById("second_screen").style.display = "block";
     }
@@ -489,7 +489,7 @@ export class WordsGame extends GameStage {
         fetch("https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=" + apiKey + "&lang=en-ru&text=" + this.#guessWord)
             .then((result) => result.json())
             .then((result) => {
-                console.log(result);
+                //console.log(result);
                 const noun = result.def.find((param) => param.pos === "noun"),
                     words = noun ? noun.tr : null;
                     
@@ -560,7 +560,7 @@ export class WordsGame extends GameStage {
         this.#hidePopup();
         confirmButton.disbled = true;
         if (superEasy.checked) {
-            console.log("set 3");
+            //console.log("set 3");
             this.#letterNum = 3;
         } else if (easy.checked) {
             this.#letterNum = 4;

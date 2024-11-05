@@ -8,11 +8,11 @@ import { RotateYText, createRotateYTextInstance, drawRotateYText } from "./rotat
 import { imgVertexShader, imgFragmentShader, imgUniforms, imgAttributes } from "./rotateYProgram.js";
 
 SystemSettings.customSettings = settings;
-SystemSettings.gameOptions.render.minCycleTime = 32;
+//SystemSettings.gameOptions.render.minCycleTime = 64;
 
 document.addEventListener("DOMContentLoaded", function(event) { 
     //do work
-    console.log("start app to: ", document.getElementById("game"));
+    //console.log("start app to: ", document.getElementById("game"));
     const app = new System(SystemSettings, document.getElementById("game"));
 
     app.iSystem.iExtension.registerAndCompileWebGlProgram("rotateYProgram", primitivesVertexShader, primitivesFragmentShader, primitivesUniforms, primitivesAttributes);

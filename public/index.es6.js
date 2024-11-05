@@ -8525,12 +8525,12 @@ class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
                     //card.bgColor = "rgba(0,0,0,1)";
                 }
                 card.rotate();
-            } );
+            }, 15);
         });
     }
 
     #switchScreen = () => {
-        console.log("switch screen");
+        //console.log("switch screen");
         document.getElementById("first_screen").style.display = "none";
         document.getElementById("second_screen").style.display = "block";
     }
@@ -8541,7 +8541,7 @@ class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
         fetch("https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=" + apiKey + "&lang=en-ru&text=" + this.#guessWord)
             .then((result) => result.json())
             .then((result) => {
-                console.log(result);
+                //console.log(result);
                 const noun = result.def.find((param) => param.pos === "noun"),
                     words = noun ? noun.tr : null;
                     
@@ -8612,7 +8612,7 @@ class WordsGame extends jsge__WEBPACK_IMPORTED_MODULE_0__.GameStage {
         this.#hidePopup();
         confirmButton.disbled = true;
         if (superEasy.checked) {
-            console.log("set 3");
+            //console.log("set 3");
             this.#letterNum = 3;
         } else if (easy.checked) {
             this.#letterNum = 4;
@@ -8905,11 +8905,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 jsge__WEBPACK_IMPORTED_MODULE_1__.SystemSettings.customSettings = _settings_js__WEBPACK_IMPORTED_MODULE_2__.settings;
-jsge__WEBPACK_IMPORTED_MODULE_1__.SystemSettings.gameOptions.render.minCycleTime = 32;
+//SystemSettings.gameOptions.render.minCycleTime = 64;
 
 document.addEventListener("DOMContentLoaded", function(event) { 
     //do work
-    console.log("start app to: ", document.getElementById("game"));
+    //console.log("start app to: ", document.getElementById("game"));
     const app = new jsge__WEBPACK_IMPORTED_MODULE_1__.System(jsge__WEBPACK_IMPORTED_MODULE_1__.SystemSettings, document.getElementById("game"));
 
     app.iSystem.iExtension.registerAndCompileWebGlProgram("rotateYProgram", _rotateYProgram_js__WEBPACK_IMPORTED_MODULE_4__.primitivesVertexShader, _rotateYProgram_js__WEBPACK_IMPORTED_MODULE_4__.primitivesFragmentShader, _rotateYProgram_js__WEBPACK_IMPORTED_MODULE_4__.primitivesUniforms, _rotateYProgram_js__WEBPACK_IMPORTED_MODULE_4__.primitivesAttributes);
