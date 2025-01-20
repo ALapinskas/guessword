@@ -1,6 +1,6 @@
 {
   "name": "guessword",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Guess the word game",
   "main": "src/index.js",
   "scripts": {
@@ -26,7 +26,7 @@
   "homepage": "https://github.com/ALapinskas/guessword#readme",
   "dependencies": {
     "http-server": "14.1.1",
-    "jsge": "1.5.0"
+    "jsge": "1.5.3"
   },
   "devDependencies": {
     "webpack": "5.91.0",

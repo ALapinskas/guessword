@@ -1,7 +1,7 @@
 import { DrawRectObject } from "jsge/src/base/2d/DrawRectObject.js";
 import { ImageTempStorage } from "jsge/src/base/Temp/ImageTempStorage.js";
 import { DrawShapeObject } from "jsge/src/base/2d/DrawShapeObject.js";
-import { Rectangle } from "jsge/src/base/Primitives.js";
+import { Rectangle } from "jsge/src/base/2d/Primitives.js";
 class RotateYRect extends DrawRectObject {
     z = 0;
     originalXPos;
