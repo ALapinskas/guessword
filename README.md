@@ -19,4 +19,4 @@
 
 Словарь в файле: /dict/words.txt
 
-Published game: [https://reslc.ru/node/125] (https://reslc.ru/node/125) \
+Published game: [https://reslc.ru/node/125](https://reslc.ru/node/125) \
