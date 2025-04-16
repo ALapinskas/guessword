@@ -1,6 +1,6 @@
 {
   "name": "guessword",
-  "version": "0.0.9",
+  "version": "1.0.0",
   "description": "Guess the word game",
   "main": "src/index.js",
   "scripts": {
@@ -16,7 +16,9 @@
   "keywords": [
     "guess the word",
     "game",
-    "javascript"
+    "javascript",
+    "jsge",
+    "html"
   ],
   "author": "Arturas-Alfredas Lapinskas",
   "license": "MIT",
