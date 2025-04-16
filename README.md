@@ -17,4 +17,6 @@
 3. npm start
 4. Open browser on localhost:9000
 
-Словарь в файле /dict/words.txt
+Словарь в файле: /dict/words.txt
+
+Published game: [https://reslc.ru/node/125] (https://reslc.ru/node/125) \
