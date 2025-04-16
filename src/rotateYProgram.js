@@ -19,11 +19,7 @@ const primitivesVertexShader =  `
             0, 0, 2.0 / u_resolution.z, 0,
             -1, 1, 0, 1
         );
-        //mat3 translationMatrix1 = mat3(
-        //    1, 0, 0,
-        //    0, 1, 0,
-        //    u_translation.x, u_translation.y, 1
-        //);
+
         mat4 translationMatrix = mat4(
             1, 0, 0, 0,
             0, 1, 0, 0,
@@ -37,17 +33,7 @@ const primitivesVertexShader =  `
             s, 0, c, 0,
             0, 0, 0, 1
         );
-        //mat3 rotationMatrix = mat3(
-        //    c, s, 0,
-        //    -s, c, 0,
-        //    0, 0, 1
-        //);
-
-        //mat3 scalingMatrix = mat3(
-        //    u_scale.x, 0, 0,
-        //    0, u_scale.y, 0,
-        //    0, 0, 1
-        //);
+        
         mat4 scalingMatrix = mat4(
             u_scale.x, 0, 0, 0,
             0, u_scale.y, 0, 0,
@@ -55,10 +41,6 @@ const primitivesVertexShader =  `
             0, 0, 0, 1
         );
         mat4 matrix = projection * translationMatrix * rotationMatrix * scalingMatrix;
-
-        //vec2 position = (matrix * vec3(a_position, 1)).xy;
-        //vec2 clipSpace = position / u_resolution * 2.0 - 1.0;
-        //gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
         
         gl_Position = matrix * a_position;
     }
@@ -112,11 +94,7 @@ const imgVertexShader =  `
             0, 0, 2.0 / u_resolution.z, 0,
             -1, 1, 0, 1
         );
-        //mat3 translationMatrix1 = mat3(
-        //    1, 0, 0,
-        //    0, 1, 0,
-        //    u_translation.x, u_translation.y, 1
-        //);
+        
         mat4 translationMatrix = mat4(
             1, 0, 0, 0,
             0, 1, 0, 0,
@@ -130,17 +108,7 @@ const imgVertexShader =  `
             s, 0, c, 0,
             0, 0, 0, 1
         );
-        //mat3 rotationMatrix = mat3(
-        //    c, s, 0,
-        //    -s, c, 0,
-        //    0, 0, 1
-        //);
-
-        //mat3 scalingMatrix = mat3(
-        //    u_scale.x, 0, 0,
-        //    0, u_scale.y, 0,
-        //    0, 0, 1
-        //);
+        
         mat4 scalingMatrix = mat4(
             u_scale.x, 0, 0, 0,
             0, u_scale.y, 0, 0,
@@ -148,10 +116,6 @@ const imgVertexShader =  `
             0, 0, 0, 1
         );
         mat4 matrix = projection * translationMatrix * rotationMatrix * scalingMatrix;
-
-        //vec2 position = (matrix * vec3(a_position, 1)).xy;
-        //vec2 clipSpace = position / u_resolution * 2.0 - 1.0;
-        //gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
         
         gl_Position = matrix * a_position;
         
